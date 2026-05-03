@@ -2,9 +2,9 @@
 *.txt export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
-scr/ArgsMain.java  export-ignore
-scr/controller/ArgsController.java export-ignore
+src/ArgsMain.java  export-ignore
+src/controller/ArgsController.java export-ignore
 
 # Ignore folder
-scr/commands/ export-ignore
-scr/tests/ export-ignore
+src/commands/ export-ignore
+src/tests/ export-ignore
