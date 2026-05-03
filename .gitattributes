@@ -1,0 +1,10 @@
+# Ignore files
+*.txt export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+scr/ArgsMain.java  export-ignore
+scr/controller/ArgsController.java export-ignore
+
+# Ignore folder
+scr/commands/ export-ignore
+scr/tests/ export-ignore

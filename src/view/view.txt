@@ -1,0 +1,2 @@
+View: Das ist die reine Ausgabe, die dem Nutzer die Daten schick formatiert anzeigt. 
+Das sind in diesem Fall hauptsächlich System.out.println-Befehle, die alles in die Konsole schreiben.

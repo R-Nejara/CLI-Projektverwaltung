@@ -1,0 +1,2 @@
+In der View liegen die reinen Daten und die Logik, also zum Beispiel Projekt-Objekte und Listen. 
+Die Vuew weiß nichts von der Konsole oder dem User, sondern verwaltet nur den Zustand der Anwendung.

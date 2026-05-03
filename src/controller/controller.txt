@@ -1,0 +1,2 @@
+Der Controller ist die Steuerlogik, die User-Eingaben entgegennimmt und auswertet.  Der Controller entscheidet dann, 
+welche Daten im Model geändert werden müssen und wann die View aktualisiert wird.
