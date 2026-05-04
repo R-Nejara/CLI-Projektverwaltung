@@ -8,7 +8,7 @@ public class ArgsMain {
             ArgsController controller = new ArgsController();
             controller.handleInput(args);
         } else {
-            System.err.println("Error: No arguments provided. Please specify a command.");
+            main(args);
         }
     }
 }

@@ -1,7 +1,10 @@
 package src;
 
+import src.controller.DefaultController;
+
 public class Main {
     public static void main(String[] agrs) {
-        System.out.println("Hello World!");
+        DefaultController controller = new DefaultController();
+        controller.run();
     }
 }
