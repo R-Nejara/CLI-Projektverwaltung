@@ -14,6 +14,7 @@ public class ArgsController {
 
     public void registerCommand(Command command) {
         commands.put(command.getKey().toLowerCase(), (args) -> command.execute(args));
+        commands.put(command.getShortcut().toLowerCase(), (args) -> command.execute(args));
     }
 
     public void handleInput(String[] args) {
