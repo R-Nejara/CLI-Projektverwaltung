@@ -4,7 +4,7 @@ public class ExampleCommand implements Command {
     private final static String KEY = "example";
     private final static String SHORTCUT = "e";
 
-     public ExampleCommand() {}
+    public ExampleCommand() {}
 
      @Override
     public void execute(String[] args) {}
