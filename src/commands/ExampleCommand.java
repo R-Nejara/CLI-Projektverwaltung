@@ -6,7 +6,7 @@ public class ExampleCommand implements Command {
 
     public ExampleCommand() {}
 
-     @Override
+    @Override
     public void execute(String[] args) {}
 
     @Override
