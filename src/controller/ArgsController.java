@@ -1,30 +1,19 @@
 package src.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
 import src.commands.Command;
-import src.commands.ExampleCommand;
+import src.commands.RootCommand;
 
 public class ArgsController {
-    private final Map<String, Consumer<String[]>> commands = new HashMap<>();
-
-    public ArgsController() {
-        registerCommand(new ExampleCommand());
-    }
-
-    public void registerCommand(Command command) {
-        commands.put(command.getKey(), (args) -> command.execute(args));
-        commands.put(command.getShortcut(), (args) -> command.execute(args));
-    }
-
     public void handleInput(String[] args) {
-        String cmd = args[0].toLowerCase();
+        Command root = new RootCommand();
 
-        if (commands.containsKey(cmd)) {
-            commands.get(cmd).accept(args);
-        } else {
-            System.out.println("Error: Unknown command.");
+        if (args.length > 0 
+            && (args[0].equals("help")
+            || args[0].equals("-h"))
+        ) {
+            System.out.println(root.toString());
+            return;
         }
+        root.execute(args);
     }
 }

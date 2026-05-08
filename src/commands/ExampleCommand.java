@@ -2,7 +2,7 @@ package src.commands;
 
 public class ExampleCommand extends BaseCommand {
     public ExampleCommand() {
-        super("example", "-e");
+        super("example", "-e", 0);
     }
 
     @Override
