@@ -5,8 +5,8 @@ public abstract class BaseCommand implements Command {
     private final String SHORTCUT;
 
     protected BaseCommand(String key, String shortcut) {
-        this.KEY = key;
-        this.SHORTCUT = shortcut;
+        this.KEY = key.toLowerCase();
+        this.SHORTCUT = shortcut.toLowerCase();
     }
 
     @Override

@@ -4,17 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import src.commands.Command;
+import src.commands.ExampleCommand;
 
 public class ArgsController {
     private final Map<String, Consumer<String[]>> commands = new HashMap<>();
 
     public ArgsController() {
-        //registerCommand(command);
+        registerCommand(new ExampleCommand());
     }
 
     public void registerCommand(Command command) {
-        commands.put(command.getKey().toLowerCase(), (args) -> command.execute(args));
-        commands.put(command.getShortcut().toLowerCase(), (args) -> command.execute(args));
+        commands.put(command.getKey(), (args) -> command.execute(args));
+        commands.put(command.getShortcut(), (args) -> command.execute(args));
     }
 
     public void handleInput(String[] args) {
