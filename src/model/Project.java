@@ -3,15 +3,16 @@ package src.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Project {
-    private final String id;
+    private final UUID id;
     private String name;
     private String description;
     private final List<Task> tasks;
     private LocalDateTime dueDate;
 
-    public Project(String id, String name, String desciption, LocalDateTime dueDate) {
+    public Project(UUID id, String name, String desciption, LocalDateTime dueDate) {
         this.id = id;
         this.name = name;
         this.description = desciption;
@@ -19,8 +20,16 @@ public class Project {
         this.dueDate = dueDate;
     }
 
+    public Project(String name, String desciption, LocalDateTime dueDate) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.description = desciption;
+        this.tasks = new ArrayList<>();
+        this.dueDate = dueDate;
+    }
+
     // Getter
-    public String getId() { return this.id; }
+    public UUID getId() { return this.id; }
     public String getTitle() { return this.name; }
     public String getDescription() { return this.description; }
     public List<Task> getTasks() { return this.tasks; }

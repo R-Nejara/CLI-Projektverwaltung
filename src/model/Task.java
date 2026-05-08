@@ -1,15 +1,16 @@
 package src.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Task {
-    private final String id;
+    private final UUID id;
     private String title;
     private String description;
     private State state;
     private LocalDateTime dueDate;
 
-    public Task(String id, String title, String description, State state, LocalDateTime dueDate) {
+    public Task(UUID id, String title, String description, State state, LocalDateTime dueDate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -17,8 +18,16 @@ public class Task {
         this.dueDate = dueDate;
     }
 
+    public Task(String title, String description, State state, LocalDateTime dueDate) {
+        this.id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
+        this.state = (state == null) ? State.OPEN : state;
+        this.dueDate = dueDate;
+    }
+
     // Getter
-    public String getId() { return id; }
+    public UUID getId() { return id; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public State getState() { return state; }
