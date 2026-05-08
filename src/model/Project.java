@@ -45,11 +45,12 @@ public class Project {
         this.description = newDesciption;
     }
 
-    public void addTask(Task newTask) {
-        //ToDo
+    public void addTasks(Task... newTasks) {
+        if (newTasks == null) { return; } 
+        this.tasks.addAll(List.of(newTasks));
     }
 
-    public void removeTask(Task task) {
+    public void removeTasks(Task... tasks) {
         //ToDo
     }
 
