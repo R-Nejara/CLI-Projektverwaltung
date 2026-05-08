@@ -8,7 +8,7 @@ public class ArgsMain {
             ArgsController controller = new ArgsController();
             controller.handleInput(args);
         } else {
-            main(args);
+            Main.main(args);
         }
     }
 }

@@ -23,6 +23,6 @@ public class DefaultController {
     }
 
     private void handleInput(String input) {
-        System.out.printf("Input: {%s}\n", input);
+        System.out.printf("Input: %s\n", input);
     }
 }
