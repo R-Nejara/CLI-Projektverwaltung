@@ -6,7 +6,7 @@ public class DefaultController {
     public void run() {
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) { 
-                System.out.print("> "); // ToDO: -> move to View
+                System.out.print("> "); // TODO: -> move to View
                 String input = scanner.nextLine();
 
 
@@ -18,7 +18,7 @@ public class DefaultController {
             }
             scanner.close();
         }  catch(Exception e) {
-            System.err.printf("Error: {%s}\n", e.getLocalizedMessage()); // ToDO: -> move to View
+            System.err.printf("Error: {%s}\n", e.getLocalizedMessage()); // TODO: -> move to View
         }
     }
 

@@ -37,7 +37,7 @@ public class Project {
 
     // Setter
     public void setName(String newName) {
-        if (newName != null && newName.isBlank()) { return; } //ToDO: Error handling
+        if (newName != null && newName.isBlank()) { return; } //TODO: Error handling
         this.name = newName;
     }
 
@@ -51,7 +51,7 @@ public class Project {
     }
 
     public void removeTasks(Task... tasks) {
-        //ToDo
+        //TODO
     }
 
     public void setDueDate(LocalDateTime newDueDate) {
@@ -61,6 +61,6 @@ public class Project {
     // Overrides
     @Override
     public String toString() {
-        return ""; //ToDo
+        return ""; //TODO
     }
 }

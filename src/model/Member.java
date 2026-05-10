@@ -26,18 +26,18 @@ public class Member {
 
     // Setter
     public void setName(String newName) {
-        if (newName != null && newName.isBlank()) { return; } //ToDO: Error handling
+        if (newName != null && newName.isBlank()) { return; } //TODO: Error handling
         this.name = newName;
     }
 
     public void setRole(String newRole) {
-        if (newRole != null && newRole.isBlank()) { return; } //ToDO: Error handling
+        if (newRole != null && newRole.isBlank()) { return; } //TODO: Error handling
         this.role = newRole;
     }
 
     // Overrides
     @Override
     public String toString() {
-        return ""; //ToDo
+        return ""; //TODO
     }
 }

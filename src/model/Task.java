@@ -28,7 +28,7 @@ public class Task {
 
     // Setter
     public void setTitle(String newTitle) {
-        if (newTitle != null && title.isBlank()) { return; } //ToDo: Error handling
+        if (newTitle != null && title.isBlank()) { return; } //TODO: Error handling
         this.title = newTitle;
     }
 
@@ -46,7 +46,7 @@ public class Task {
     }
 
     public void removeAssignees(Member... members) {
-        // ToDo
+        // TODO
     }
 
     public void setDueDate(LocalDateTime newDueDate) {
@@ -56,6 +56,6 @@ public class Task {
     // Overrides
     @Override
     public String toString() {
-        return ""; //ToDo
+        return ""; //TODO
     }
 }

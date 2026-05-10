@@ -9,6 +9,7 @@ public class ProjectCommand extends BaseCommand {
         super.registerSubCommand(new AddProjectCommand(controller));
         super.registerSubCommand(new ListProjectCommand(controller));
         super.registerSubCommand(new ShowProjectCommand(controller));
+        super.registerSubCommand(new EditProjectCommand(controller));
         super.registerSubCommand(new RemoveProjectCommand(controller));
     }
 }
