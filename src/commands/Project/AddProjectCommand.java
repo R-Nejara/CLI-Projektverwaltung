@@ -1,30 +1,21 @@
 package src.commands.Project;
 
+import java.time.LocalDateTime;
 import src.commands.BaseCommand;
-import src.commands.ExampleCommand;
+import src.controller.ArgsController;
 
 public class AddProjectCommand extends BaseCommand {
-    public AddProjectCommand() {
-        super("add", "-a", 1);
-        super.registerSubCommand(new ExampleCommand());
+    public AddProjectCommand(ArgsController controller) {
+        super(controller, "add", "-a", 1);
     }
 
     @Override
     public void execute(String[] args) {
-        String name = "<empty>";
-        String description = "<empty>";
+        String name = (args.length > 0) ? args[0] : null;
+        String description = (args.length > 1) ? args[1] : null;
+        LocalDateTime dueDate = null;
 
-        if (args.length >= 1) {
-            name = args[0];
-        } else {
-            System.err.println("ERROR: missing name");
-        }
-
-        if (args.length > 1) {
-            description = args[1];
-        }
-
-        System.out.printf("add_project(name: %s, desciption: %s)\n", name, description);
+        controller.addProject(name, description, dueDate);
     }
 
     @Override 

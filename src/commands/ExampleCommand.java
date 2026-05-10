@@ -1,8 +1,10 @@
 package src.commands;
 
+import src.controller.ArgsController;
+
 public class ExampleCommand extends BaseCommand {
-    public ExampleCommand() {
-        super("example", "-e", 0);
+    public ExampleCommand(ArgsController controller) {
+        super(controller, "example", "-e", 0);
     }
 
     @Override

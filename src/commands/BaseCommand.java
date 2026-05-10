@@ -3,14 +3,17 @@ package src.commands;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import src.controller.ArgsController;
 
 public abstract class BaseCommand implements Command {
     private final Map<String, Command> subCommands = new LinkedHashMap<>();
+    protected final ArgsController controller;
     private final String KEY;
     private final String SHORTCUT;
     private final int commandLevel;
 
-    protected BaseCommand(String key, String shortcut, int commandLevel) {
+    protected BaseCommand(ArgsController controller, String key, String shortcut, int commandLevel) {
+        this.controller = controller;
         this.KEY = key.toLowerCase();
         this.SHORTCUT = shortcut.toLowerCase();
         this.commandLevel = commandLevel;

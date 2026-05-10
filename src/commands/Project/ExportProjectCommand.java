@@ -1,10 +1,11 @@
 package src.commands.Project;
 
 import src.commands.BaseCommand;
+import src.controller.ArgsController;
 
 public class ExportProjectCommand extends BaseCommand {
-    public ExportProjectCommand() {
-        super("export", "-ex", 1);
+    public ExportProjectCommand(ArgsController controller) {
+        super(controller, "export", "-ex", 1);
     }
 
     @Override
