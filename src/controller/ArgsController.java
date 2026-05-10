@@ -1,18 +1,19 @@
 package src.controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import src.commands.Command;
 import src.commands.RootCommand;
 import src.model.Project;
 
 public class ArgsController implements Controller {
-    private final List<Project> projects;
+    private final Set<Project> projects;
 
     public ArgsController() {
         //ToDo import projects
-        this.projects = new ArrayList<>();
+        this.projects = new HashSet<>();
     }
     
     @Override
@@ -79,7 +80,11 @@ public class ArgsController implements Controller {
     }
 
     @Override
-    public void deleteProjects(String[] projectNames) {
+    public void removeProjects(String[] projectNames) {
+        if (projectNames == null) {
+            //ToDo
+            return;
+        }
         //ToDo
     }
 }

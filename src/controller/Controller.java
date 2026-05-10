@@ -8,5 +8,5 @@ public interface Controller {
     public void listProjects(String filter);
     public void showProject(String name);
     public void editProject(String name, String desciption, LocalDateTime dueDate);
-    public void deleteProjects(String[] projectNames);
+    public void removeProjects(String[] projectNames);
 }
