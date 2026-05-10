@@ -17,6 +17,6 @@ public class ListProjectCommand extends BaseCommand {
 
     @Override 
     public String toString() {
-        return "\t" + this.getKey().toUpperCase() + ": (project|-p) ("+ super.getKey() + "|" + super.getShortcut() + ") [filter]";
+        return "\t" + super.getKey() + " | " + super.getShortcut() + " <filter>";
     }
 }

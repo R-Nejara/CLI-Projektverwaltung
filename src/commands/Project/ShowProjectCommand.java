@@ -17,6 +17,6 @@ public class ShowProjectCommand extends BaseCommand {
 
     @Override 
     public String toString() {
-        return "\t" + this.getKey().toUpperCase() + ": (project|-p) ("+ super.getKey() + "|" + super.getShortcut() + ") [name]";
+        return "\t" + super.getKey() + "|" + super.getShortcut() + ") <name>";
     }
 }

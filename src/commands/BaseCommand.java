@@ -49,22 +49,26 @@ public abstract class BaseCommand implements Command {
 
     @Override
     public String toString() {
-        if (subCommands.isEmpty()) {
-            return getKey().toUpperCase() + ": (" + getKey() + "|" + getShortcut() + ")";
-        }
-
         StringBuilder result = new StringBuilder();
+        String indent = "  ".repeat(this.commandLevel);
+
         if (!isRoot()) {
-            result
-                .append("\t".repeat(this.commandLevel))
-                .append(KEY.toUpperCase()).append(":\n");
+            result.append(indent)
+                .append(getKey().toUpperCase())
+                .append(": ")
+                .append(getKey())
+                .append("|")
+                .append(getShortcut())
+                .append("\n");
         }
 
         subCommands.forEach((name, cmd) -> {
             if (!isShortcut(name)) {
-                result
-                    .append("\t".repeat(this.commandLevel))
-                    .append(cmd.toString()).append("\n");
+                String subContent = cmd.toString();
+                if (!subContent.isEmpty()) {
+                    result.append(subContent)
+                    .append("\n");
+                }
             }
         });
 

@@ -20,6 +20,6 @@ public class AddProjectCommand extends BaseCommand {
 
     @Override 
     public String toString() {
-        return "\t" + this.getKey().toUpperCase() + ": (project|-p) (add|-a) <name> [description]";
+        return "\t" + super.getKey() + " | " + super.getShortcut() + " <name> [<description>]";
     }
 }
