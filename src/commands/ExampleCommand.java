@@ -1,9 +1,9 @@
 package src.commands;
 
-import src.controller.ArgsController;
+import src.controller.Controller;
 
 public class ExampleCommand extends BaseCommand {
-    public ExampleCommand(ArgsController controller) {
+    public ExampleCommand(Controller controller) {
         super(controller, "example", "-e", 0);
     }
 

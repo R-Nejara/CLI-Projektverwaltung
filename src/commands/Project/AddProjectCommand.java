@@ -2,10 +2,10 @@ package src.commands.Project;
 
 import java.time.LocalDateTime;
 import src.commands.BaseCommand;
-import src.controller.ArgsController;
+import src.controller.Controller;
 
 public class AddProjectCommand extends BaseCommand {
-    public AddProjectCommand(ArgsController controller) {
+    public AddProjectCommand(Controller controller) {
         super(controller, "add", "-a", 1);
     }
 

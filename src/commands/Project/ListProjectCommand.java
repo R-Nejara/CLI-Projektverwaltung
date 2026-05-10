@@ -1,10 +1,10 @@
 package src.commands.Project;
 
 import src.commands.BaseCommand;
-import src.controller.ArgsController;
+import src.controller.Controller;
 
 public class ListProjectCommand extends BaseCommand {
-    public ListProjectCommand(ArgsController controller) {
+    public ListProjectCommand(Controller controller) {
         super(controller, "list", "-l", 1);
     }
 

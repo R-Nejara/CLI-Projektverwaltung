@@ -1,19 +1,22 @@
 package src.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import src.commands.Command;
 import src.commands.RootCommand;
 import src.model.Project;
 
-public class ArgsController {
-    private List<Project> projects;
+public class ArgsController implements Controller {
+    private final List<Project> projects;
 
     public ArgsController() {
         //ToDo import projects
+        this.projects = new ArrayList<>();
     }
     
-    public void handleInput(String[] args) {
+    @Override
+    public void run(String[] args) {
         Command root = new RootCommand(this);
 
         if (args.length > 0 
@@ -26,8 +29,14 @@ public class ArgsController {
         root.execute(args);
     }
 
+    @Override
     public void addProject(String name, String description, LocalDateTime dueDate) {
         if (name == null || name.isBlank()) {
+            //ToDo
+            return;
+        }
+
+        if (!projects.stream().noneMatch(project -> project.getTitle().equalsIgnoreCase(name))) {
             //ToDo
             return;
         }
@@ -38,19 +47,23 @@ public class ArgsController {
         System.out.printf("Project added [Name: %s, Desciption: %s, DueDate: %s]\n", name, description, dueDate);
     }
 
+    @Override
     public void listProjects(String filter) {
         //ToDo
     }
 
-    public void showProject(String id) {
+    @Override
+    public void showProject(String name) {
         //ToDo
     }
 
-    public void editProject(String id, String name, String description, LocalDateTime dueDate) {
+    @Override
+    public void editProject(String name, String description, LocalDateTime dueDate) {
         //ToDo
     }
 
-    public void deleteProjects(String[] projectIds) {
+    @Override
+    public void deleteProjects(String[] projectNames) {
         //ToDo
     }
 }
