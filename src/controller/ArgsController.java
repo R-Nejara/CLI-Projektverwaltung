@@ -52,8 +52,6 @@ public class ArgsController implements Controller {
     public void listProjects(String filter) {
         String searchText = (filter != null) ? filter.toLowerCase() : "";
 
-        this.projects.add(new Project("Test", "", null));
-
         List<Project> results = this.projects.stream()
                                         .filter(p -> p.getTitle().toLowerCase().contains(searchText))
                                         .toList();
@@ -65,7 +63,14 @@ public class ArgsController implements Controller {
 
     @Override
     public void showProject(String name) {
-        //ToDo
+        String searchText = (name != null) ? name.toLowerCase() : "";
+
+        Project result = this.projects.stream()
+                                        .filter(p -> p.getTitle().toLowerCase().contains(searchText))
+                                        .findFirst()
+                                        .orElse(null);
+
+        System.out.println("- " + ((result != null) ? result.getTitle() : "null"));
     }
 
     @Override
