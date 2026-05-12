@@ -2,8 +2,10 @@ package src.controller;
 
 import java.util.Scanner;
 
-public class DefaultController {
-    public void run() {
+public class DefaultController extends BaseController {
+
+    @Override
+    public void run(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) { 
                 System.out.print("> "); // TODO: -> move to View
