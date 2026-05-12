@@ -3,16 +3,16 @@ package src.controller;
 import src.commands.Command;
 import src.commands.RootCommand;
 
-public class ArgsController extends BaseController {    
+public class ArgsController extends BaseController {  
+    private final static String HELP_KEY = "help"; 
+    private final static String HELP_SHORTCUT = "-h"; 
 
     @Override
     public void run(String[] args) {
         Command root = new RootCommand(this);
+        String rootArg = args[0].toLowerCase();
 
-        if (args.length > 0 
-            && (args[0].equals("help")
-            || args[0].equals("-h"))
-        ) {
+        if (args.length > 0 && (rootArg.equals(HELP_KEY) || rootArg.equals(HELP_SHORTCUT))) {
             System.out.println(root.toString());
             return;
         }
