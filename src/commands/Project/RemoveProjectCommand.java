@@ -5,7 +5,7 @@ import src.controller.Controller;
 
 public class RemoveProjectCommand extends BaseCommand {
     public RemoveProjectCommand(Controller controller) {
-        super(controller, "remove", "-r", 1);
+        super(controller, "remove", "r", 1);
     }
 
     @Override

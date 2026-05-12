@@ -4,7 +4,7 @@ import src.controller.Controller;
 
 public class ExampleCommand extends BaseCommand {
     public ExampleCommand(Controller controller) {
-        super(controller, "example", "-e", 0);
+        super(controller, "example", "e", 0);
     }
 
     @Override

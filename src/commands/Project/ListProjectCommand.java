@@ -5,7 +5,7 @@ import src.controller.Controller;
 
 public class ListProjectCommand extends BaseCommand {
     public ListProjectCommand(Controller controller) {
-        super(controller, "list", "-l", 1);
+        super(controller, "list", "l", 1);
     }
 
     @Override

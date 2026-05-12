@@ -5,7 +5,7 @@ import src.controller.Controller;
 
 public class ExportProjectCommand extends BaseCommand {
     public ExportProjectCommand(Controller controller) {
-        super(controller, "export", "-ex", 1);
+        super(controller, "export", "ex", 1);
     }
 
     @Override

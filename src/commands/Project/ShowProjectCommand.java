@@ -5,7 +5,7 @@ import src.controller.Controller;
 
 public class ShowProjectCommand extends BaseCommand {
     public ShowProjectCommand(Controller controller) {
-        super(controller, "show", "-s", 1);
+        super(controller, "show", "s", 1);
     }
 
     @Override
