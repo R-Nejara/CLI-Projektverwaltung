@@ -17,6 +17,6 @@ public class EditProjectCommand extends BaseCommand {
 
     @Override 
     public String toString() {
-        return "\t" + super.getKey() + "|" + super.getShortcut() + " <name> [-n <newName>] [-d <description>] [-t <dueDate>]";
+        return "\t" + super.getKey() + " | " + super.getShortcut() + " <name> [-n <newName>] [-d <description>] [-t <dueDate>]";
     }
 }
