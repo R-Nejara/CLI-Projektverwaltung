@@ -6,6 +6,9 @@ import java.util.Map;
 import src.controller.Controller;
 
 public abstract class BaseCommand implements Command {
+    public static final String SHORTCUT_SYMBOL = "-";
+    public static final String FLAG_SYMBOL = "--";
+
     private final Map<String, Command> subCommands = new LinkedHashMap<>();
     protected final Controller controller;
     private final String KEY;
@@ -15,7 +18,7 @@ public abstract class BaseCommand implements Command {
     protected BaseCommand(Controller controller, String key, String shortcut, int commandLevel) {
         this.controller = controller;
         this.KEY = key.toLowerCase();
-        this.SHORTCUT = shortcut.toLowerCase();
+        this.SHORTCUT = BaseCommand.SHORTCUT_SYMBOL + shortcut.toLowerCase();
         this.commandLevel = commandLevel;
     }
 
@@ -85,12 +88,35 @@ public abstract class BaseCommand implements Command {
         subCommands.put(command.getShortcut(), command);
     }
 
+    protected Map<String, String> getFlags(String[] args) {
+        Map<String, String> flags = new LinkedHashMap<>();
+
+        for (int i=0; i < args.length-1; i++) {
+            String arg = args[i];
+
+            if (!isFlag(arg)) { continue; }
+
+            String flag = !arg.isBlank() ? arg : null;
+            String value = !args[i+1].isBlank() ? args[i+1] : null;
+            
+            if (flag != null && value != null) { 
+                flag = flag.replaceAll(BaseCommand.FLAG_SYMBOL, "");
+                flags.put(flag, value);
+                i++;
+            }
+        }
+        return flags;
+    }
+
     private boolean isRoot() {
         return getKey().toLowerCase().startsWith("root");
     }
 
     private boolean isShortcut(String name) {
-        return name.startsWith("-");
+        return name.startsWith(BaseCommand.SHORTCUT_SYMBOL);
     }
 
+    private boolean isFlag(String name) {
+        return name.startsWith(BaseCommand.FLAG_SYMBOL);
+    }
 }
