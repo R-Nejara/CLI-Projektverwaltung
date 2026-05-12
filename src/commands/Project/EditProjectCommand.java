@@ -10,8 +10,9 @@ public class EditProjectCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        //TODO
-        controller.editProject(null, null, null, null);
+        String name = (args.length > 0) ? args[0] : null;
+        //TODO flags
+        controller.editProject(name, null, null, null);
     }
 
     @Override 
