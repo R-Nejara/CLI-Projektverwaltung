@@ -51,7 +51,8 @@ public class Project {
     }
 
     public void removeTasks(Task... tasks) {
-        //TODO
+        if (tasks == null) { return; } 
+        this.tasks.removeAll(List.of(tasks));
     }
 
     public void setDueDate(LocalDateTime newDueDate) {
