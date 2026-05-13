@@ -7,5 +7,6 @@ public class TaskCommand extends BaseCommand {
     public TaskCommand(Controller controller) {
         super(controller, "task", "t", 0);
         super.registerSubCommand(new AddTaskCommand(controller));
+        super.registerSubCommand(new EditTaskCommand(controller));
     }
 }
