@@ -46,7 +46,8 @@ public class Task {
     }
 
     public void removeAssignees(Member... members) {
-        // TODO
+        if (members == null) { return; }
+        this.assignees.removeAll(List.of(members));
     }
 
     public void setDueDate(LocalDateTime newDueDate) {
