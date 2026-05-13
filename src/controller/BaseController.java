@@ -1,19 +1,20 @@
 package src.controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import src.model.DefaultModel;
+import src.model.Model;
 import src.model.Project;
 import src.view.DefaultView;
 import src.view.View;
 
 public abstract class BaseController implements Controller {
     private final View view = new DefaultView();
+    private final Model model = new DefaultModel();
     private final List<Project> projects;
 
     protected  BaseController() {
-        //TODO import projects
-        this.projects = new ArrayList<>();
+        this.projects = model.importProjects();
 
     }
 
@@ -29,6 +30,7 @@ public abstract class BaseController implements Controller {
 
         Project newProject = new Project(name, description, dueDate);
         projects.add(newProject);
+        model.exportProject(newProject);
 
         view.printMessage(String.format("Project added [Name: %s, Desciption: %s, DueDate: %s]\n", name, description, dueDate));
     }
@@ -76,6 +78,7 @@ public abstract class BaseController implements Controller {
 
         //TODO view.printMessage();
         view.printWarning("This feature is not yet implemented.");
+        model.exportProject(project);
     }
 
     @Override
@@ -86,6 +89,7 @@ public abstract class BaseController implements Controller {
         }
         //TODO
         view.printWarning("This feature is not yet implemented.");
+        //mode.deleteProject();
     }
 
     // private functions
