@@ -19,6 +19,10 @@ public abstract class BaseController implements Controller {
 
     }
 
+//-------------------------------------------------------------------------
+// Section: Project
+//-------------------------------------------------------------------------
+
     @Override
     public void addProject(String name, String description, LocalDateTime dueDate) {
         Project similaProject = getProjectByName(name);
@@ -117,7 +121,43 @@ public abstract class BaseController implements Controller {
         }
     }
 
-    // private functions
+//-------------------------------------------------------------------------
+// Section: Task
+//-------------------------------------------------------------------------
+
+    @Override
+    public void addTask(String projectName, String name, String description, String state) {
+        //TODO
+        System.out.println("Unimplemented method 'addTask'");
+    }
+
+    @Override
+    public void listTasks(String projectName, String filter) {
+        //TODO
+        System.out.println("Unimplemented method 'listTasks'");
+    }
+
+    @Override
+    public void showTask(String projectName, String name) {
+        //TODO
+        System.out.println("Unimplemented method 'showTask'");
+    }
+
+    @Override
+    public void editTask(String projectName, String newName, String description, String state) {
+        //TODO
+        System.out.println("Unimplemented method 'editTask'");
+    }
+
+    @Override
+    public void removeTasks(String projectName, Set<String> taskNames) {
+        //TODO
+        System.out.println("Unimplemented method 'removeTasks'");
+    }
+
+//-------------------------------------------------------------------------
+// Section: private functions
+//-------------------------------------------------------------------------
 
     private Project getProjectByName(String name) {
         String searchText = (name != null && !name.isBlank()) ? name.toLowerCase() : null;
