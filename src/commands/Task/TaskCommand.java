@@ -10,5 +10,6 @@ public class TaskCommand extends BaseCommand {
         super.registerSubCommand(new EditTaskCommand(controller));
         super.registerSubCommand(new ListTaskCommand(controller));
         super.registerSubCommand(new ShowTaskCommand(controller));
+        super.registerSubCommand(new RemoveTaskCommand(controller));
     }
 }
