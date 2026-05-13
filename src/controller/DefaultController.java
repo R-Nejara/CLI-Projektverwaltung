@@ -8,7 +8,7 @@ public class DefaultController extends BaseController {
     public void run(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) { 
-                System.out.print("> "); // TODO: -> move to View
+                view.printMessage("> ");
                 String input = scanner.nextLine();
 
 
@@ -20,7 +20,7 @@ public class DefaultController extends BaseController {
             }
             scanner.close();
         }  catch(Exception e) {
-            System.err.printf("Error: {%s}\n", e.getLocalizedMessage()); // TODO: -> move to View
+            view.printError(e.getLocalizedMessage());
         }
     }
 
