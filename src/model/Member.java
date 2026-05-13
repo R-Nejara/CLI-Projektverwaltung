@@ -19,12 +19,18 @@ public class Member {
         this.role = role;
     }
 
-    // Getter
+//-------------------------------------------------------------------------
+// Section: Getter
+//-------------------------------------------------------------------------
+
     public UUID getId() { return this.id; }
     public String getName() { return this.name; }
     public String getRole() { return this.role; }
 
-    // Setter
+//-------------------------------------------------------------------------
+// Section: Setter
+//-------------------------------------------------------------------------
+
     public void setName(String newName) {
         if (newName != null && newName.isBlank()) { return; } //TODO: Error handling
         this.name = newName;
@@ -35,7 +41,10 @@ public class Member {
         this.role = newRole;
     }
 
-    // Overrides
+//-------------------------------------------------------------------------
+// Section: Java methods
+//-------------------------------------------------------------------------
+
     @Override
     public String toString() {
         return ""; //TODO

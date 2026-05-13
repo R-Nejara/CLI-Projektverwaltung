@@ -44,6 +44,10 @@ public abstract class BaseCommand implements Command {
         }
     }
 
+//-------------------------------------------------------------------------
+// Section: Getter
+//-------------------------------------------------------------------------
+
     @Override
     public String getKey() {
         return this.KEY;
@@ -53,6 +57,10 @@ public abstract class BaseCommand implements Command {
     public String getShortcut() {
         return this.SHORTCUT;
     }
+
+//-------------------------------------------------------------------------
+// Section: Java methods
+//-------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -81,6 +89,10 @@ public abstract class BaseCommand implements Command {
 
         return result.toString();
     }
+
+//-------------------------------------------------------------------------
+// Section: Protected functions
+//-------------------------------------------------------------------------
 
     protected String[] getSubArgs(String[] args) {
         if (args.length < 1) { return new String[0]; }
@@ -131,6 +143,10 @@ public abstract class BaseCommand implements Command {
             return null;
         }
     }
+
+//-------------------------------------------------------------------------
+// Section: Private functions
+//-------------------------------------------------------------------------
 
     private boolean isRoot() {
         return getKey().toLowerCase().startsWith("root");

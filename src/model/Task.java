@@ -19,14 +19,20 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    // Getter
+//-------------------------------------------------------------------------
+// Section: Getter
+//-------------------------------------------------------------------------
+
     public String getTitle() { return this.title; }
     public String getDescription() { return this.description; }
     public State getState() { return this.state; }
     public List<Member> getAssignees() { return this.assignees; }
     public LocalDateTime getDueDate() { return this.dueDate; }
 
-    // Setter
+//-------------------------------------------------------------------------
+// Section: Setter
+//-------------------------------------------------------------------------
+
     public void setTitle(String newTitle) {
         if (newTitle != null && title.isBlank()) { return; } //TODO: Error handling
         this.title = newTitle;
@@ -54,7 +60,10 @@ public class Task {
         this.dueDate = (newDueDate == null) ? this.dueDate : newDueDate;
     }
 
-    // Overrides
+//-------------------------------------------------------------------------
+// Section: Java methods
+//-------------------------------------------------------------------------
+
     @Override
     public String toString() {
         return ""; //TODO

@@ -28,14 +28,20 @@ public class Project {
         this.dueDate = dueDate;
     }
 
-    // Getter
+//-------------------------------------------------------------------------
+// Section: Getter
+//-------------------------------------------------------------------------
+
     public UUID getId() { return this.id; }
     public String getTitle() { return this.name; }
     public String getDescription() { return this.description; }
     public List<Task> getTasks() { return this.tasks; }
     public LocalDateTime getDueDate() { return this.dueDate; }
 
-    // Setter
+//-------------------------------------------------------------------------
+// Section: Setter
+//-------------------------------------------------------------------------
+
     public void setName(String newName) {
         if (newName != null && newName.isBlank()) { return; } //TODO: Error handling
         this.name = newName;
@@ -58,6 +64,10 @@ public class Project {
     public void setDueDate(LocalDateTime newDueDate) {
         this.dueDate = (newDueDate == null) ? this.dueDate : newDueDate;
     }
+
+//-------------------------------------------------------------------------
+// Section: Java methods
+//-------------------------------------------------------------------------
 
     // Overrides
     @Override
