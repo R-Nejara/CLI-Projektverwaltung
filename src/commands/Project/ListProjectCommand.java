@@ -17,6 +17,6 @@ public class ListProjectCommand extends BaseCommand {
 
     @Override 
     public String toString() {
-        return "\t" + super.getKey() + " | " + super.getShortcut() + " <filter>";
+        return "\t%s | %s <filter>\n".formatted(super.getKey(), super.getShortcut());
     }
 }

@@ -15,6 +15,6 @@ public class RemoveProjectCommand extends BaseCommand {
 
     @Override 
     public String toString() {
-        return "\t" + super.getKey() + " | " + super.getShortcut() + " <name>...";
+        return "\t%s | %s <name>...\n".formatted(super.getKey(), super.getShortcut());
     }
 }
