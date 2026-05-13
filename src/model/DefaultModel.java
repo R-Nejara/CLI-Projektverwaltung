@@ -5,13 +5,13 @@ import java.util.List;
 
 public class DefaultModel implements Model {
     @Override
-    public void exportProject(Project project) {
+    public void saveProject(Project project) {
         //TODO
         System.out.println("Unimplemented method 'exportProject'");
     }
 
     @Override
-    public List<Project> importProjects() {
+    public List<Project> loadProjects() {
         //TODO
         System.out.println("Unimplemented method 'importProjects'");
         return new ArrayList<>();

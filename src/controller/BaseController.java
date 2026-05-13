@@ -15,7 +15,7 @@ public abstract class BaseController implements Controller {
     private final List<Project> projects;
 
     protected  BaseController() {
-        this.projects = model.importProjects();
+        this.projects = model.loadProjects();
 
     }
 
@@ -35,7 +35,7 @@ public abstract class BaseController implements Controller {
 
         Project newProject = new Project(name, description, dueDate);
         projects.add(newProject);
-        model.exportProject(newProject);
+        model.saveProject(newProject);
 
         view.printMessage(String.format("Project added [Name: %s, Desciption: %s, DueDate: %s]\n", name, description, dueDate));
     }
@@ -87,7 +87,7 @@ public abstract class BaseController implements Controller {
         }
 
         if (projectUpdated) {
-            model.exportProject(project);
+            model.saveProject(project);
             view.printMessage("Project '%s' successfully updated.".formatted(project.getTitle()));
         } else {
             view.printWarning("Nothing was updated.");
