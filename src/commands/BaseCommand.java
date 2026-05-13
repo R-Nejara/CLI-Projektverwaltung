@@ -1,5 +1,9 @@
 package src.commands;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -106,6 +110,26 @@ public abstract class BaseCommand implements Command {
             }
         }
         return flags;
+    }
+
+    protected LocalDateTime parseDateTime(String input) {
+        if (input == null || input.isBlank()) { return null; }
+
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .appendPattern("dd.MM.yyyy")
+            .optionalStart()
+            .appendPattern(" HH:mm")
+            .optionalEnd()
+            .parseDefaulting(ChronoField.HOUR_OF_DAY, 23)
+            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 59)
+            .toFormatter();
+
+        try {
+            return LocalDateTime.parse(input, formatter);
+        } catch (Exception e) {
+            System.out.println(e.getLocalizedMessage());
+            return null;
+        }
     }
 
     private boolean isRoot() {

@@ -24,16 +24,20 @@ public class AddProjectCommand extends BaseCommand {
             switch (key) {
                 case "n" -> name = value;
                 case "d" -> description = value;
-                case "t" -> dueDate = LocalDateTime.now(); //TODO 
+                case "t" -> dueDate = super.parseDateTime(value); 
                 default -> {}
             }
         }
-
         controller.addProject(name, description, dueDate);
     }
 
     @Override 
     public String toString() {
-        return "\t" + super.getKey() + " | " + super.getShortcut() + " [--n <name>] [--d <description>] [--t <dueDate>]";
+        return """
+            \t%s | %s [--n <name>] [--d <desc>] [--t <date>]
+            \t  --n <name>        Set the project name
+            \t  --d <description> Set the project description (optional)
+            \t  --t <dueDate>     Set a due date (Format: dd.MM.yyyy [HH:mm])
+            """.formatted(super.getKey(), super.getShortcut());
     }
 }
