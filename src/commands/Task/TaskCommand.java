@@ -1,0 +1,11 @@
+package src.commands.Task;
+
+import src.commands.BaseCommand;
+import src.controller.Controller;
+
+public class TaskCommand extends BaseCommand {
+    public TaskCommand(Controller controller) {
+        super(controller, "task", "t", 0);
+        super.registerSubCommand(new AddTaskCommand(controller));
+    }
+}
