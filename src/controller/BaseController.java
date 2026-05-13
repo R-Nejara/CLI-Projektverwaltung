@@ -2,6 +2,7 @@ package src.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import src.model.DefaultModel;
 import src.model.Model;
 import src.model.Project;
@@ -9,8 +10,8 @@ import src.view.DefaultView;
 import src.view.View;
 
 public abstract class BaseController implements Controller {
-    private final View view = new DefaultView();
-    private final Model model = new DefaultModel();
+    protected final View view = new DefaultView();
+    protected final Model model = new DefaultModel();
     private final List<Project> projects;
 
     protected  BaseController() {
@@ -82,14 +83,30 @@ public abstract class BaseController implements Controller {
     }
 
     @Override
-    public void removeProjects(String[] projectNames) {
-        if (projectNames == null || projectNames.length <= 0) {
+    public void removeProjects(Set<String> projectNames) {
+        Integer projectCount = this.projects.size();
+
+        if (this.projects.isEmpty()) {
+            view.printError("No Projects available.");
+            return;
+        }
+
+        if (projectNames == null || projectNames.size() <= 0) {
             view.printError("Specify at least one project name to remove.");
             return;
         }
-        //TODO
-        view.printWarning("This feature is not yet implemented.");
-        //mode.deleteProject();
+
+        for (String projectName : projectNames) {
+            Project project = getProjectByName(projectName);
+            if (project == null) { continue; }
+            this.projects.remove(project);
+            model.deleteProject(project);
+            view.printMessage("Successfully deleted '%s'".formatted(project.getTitle()));
+        }
+
+        if (this.projects.size() >= projectCount) {
+            view.printWarning("No projects deleted.");
+        }
     }
 
     // private functions

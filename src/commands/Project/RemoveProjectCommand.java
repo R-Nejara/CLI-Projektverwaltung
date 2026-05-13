@@ -1,5 +1,6 @@
 package src.commands.Project;
 
+import java.util.Set;
 import src.commands.BaseCommand;
 import src.controller.Controller;
 
@@ -10,7 +11,7 @@ public class RemoveProjectCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        controller.removeProjects(args);
+        controller.removeProjects(Set.of(args));
     }
 
     @Override 
