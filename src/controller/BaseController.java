@@ -63,23 +63,31 @@ public abstract class BaseController implements Controller {
     @Override
     public void editProject(String name, String newName, String description, LocalDateTime dueDate) {
         Project project = getProjectByName(name);
+        Boolean projectUpdated = false;
+
         if (project == null) { return; } 
 
-        if (newName != null && !newName.isBlank()) {
+        if (newName != null && !newName.isBlank() && !newName.equals(project.getTitle())) {
             project.setName(newName);
+            projectUpdated = true;
         }
 
-        if (description != null && !description.isBlank()) {
+        if (description != null && !description.isBlank() && !description.equals(project.getDescription())) {
             project.setDescription(description);
+            projectUpdated = true;
         }
 
-        if (dueDate != null) {
+        if (dueDate != null && dueDate.equals(project.getDueDate())) {
             project.setDueDate(dueDate);
+            projectUpdated = true;
         }
 
-        //TODO view.printMessage();
-        view.printWarning("This feature is not yet implemented.");
-        model.exportProject(project);
+        if (projectUpdated) {
+            model.exportProject(project);
+            view.printMessage("Project '%s' successfully updated.".formatted(project.getTitle()));
+        } else {
+            view.printWarning("Nothing was updated.");
+        }        
     }
 
     @Override
