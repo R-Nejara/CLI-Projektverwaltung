@@ -129,9 +129,8 @@ public abstract class BaseController implements Controller {
 //-------------------------------------------------------------------------
 
     @Override
-    public void addTask(String projectName, String name, String description, String state) {
+    public void addTask(String projectName, String name, String description, String state, LocalDateTime dueDate) {
         Project project = getProjectByName(projectName);
-
         if (project == null) { return; }
 
         if (name == null || name.isBlank()) {
@@ -139,30 +138,69 @@ public abstract class BaseController implements Controller {
             return;
         }
 
-        Task newTask = new Task(name, description, state, null);
+        Task newTask = new Task(name, description, state, dueDate);
         project.addTasks(newTask);
 
         model.saveProject(project);
-        view.printMessage(String.format("Task added [Project: %s, Name: %s, Desciption: %s, DueDate: %s]\n", projectName, name, description, null));
+        view.printMessage(String.format("Task added [Project: %s, Name: %s, Desciption: %s, DueDate: %s]\n", projectName, name, description, dueDate));
     }
 
     @Override
-    public void editTask(String projectName, String newName, String description, String state) {
+    public void editTask(String projectName, String taskName, String newName, String description, String state, LocalDateTime dueDate) {
+        Boolean projectUpdated = false;
         Project project = getProjectByName(projectName);
         if (project == null) { return; }
 
-        model.saveProject(project);
-        //TODO
-        System.out.println("Unimplemented method 'editTask'");
+        Task task = getTaskByName(project, taskName);
+        if (task == null) { return; } 
+
+        if (newName != null && !newName.isBlank() && !newName.equals(task.getTitle())) {
+            task.setTitle(newName);
+            projectUpdated = true;
+        }
+
+        if (description != null && !description.isBlank() && !description.equals(task.getDescription())) {
+            task.setDescription(description);
+            projectUpdated = true;
+        }
+
+        if (state != null && !state.isBlank() && !state.equals(task.getState().toString())) {
+            task.setState(state);
+            projectUpdated = true;
+        }
+
+        if (dueDate != null && !dueDate.equals(task.getDueDate())) {
+            task.setDueDate(dueDate);
+            projectUpdated = true;
+        }
+
+        if (projectUpdated) {
+            model.saveProject(project);
+            view.printMessage("Task '%s' successfully updated.".formatted(task.getTitle()));
+        } else {
+            view.printWarning("Nothing was updated.");
+        }   
     }
 
     @Override
     public void removeTasks(String projectName, Set<String> taskNames) {
         Project project = getProjectByName(projectName);
+        Integer taskCount = project.getTasks().size();
 
-        model.saveProject(project);
-        //TODO
-        System.out.println("Unimplemented method 'removeTasks'");
+        for (String taskName : taskNames) {
+            Task task = getTaskByName(project, taskName);
+
+            if (task == null) { continue; }
+            
+            project.removeTasks(task);
+            view.printMessage("Successfully deleted '%s'".formatted(project.getTitle()));
+        }
+
+        if (project.getTasks().size() >= taskCount) {
+            view.printWarning("No tasks deleted.");
+        } else {
+            model.saveProject(project);
+        }
     }
 
 //-------------------------------------------------------------------------
@@ -185,6 +223,32 @@ public abstract class BaseController implements Controller {
 
         if (result == null) {
             view.printError(String.format("Project '%s' not found.", name));
+        }
+            
+        return result;
+    }
+
+    private Task getTaskByName(Project project, String name) {
+        String searchText = (name != null && !name.isBlank()) ? name.toLowerCase() : null;
+
+        if (project == null) { 
+            view.printError("Project name cannot be empty or null.");
+            return null;
+        }
+
+        if (searchText == null) {
+            view.printError("Task name cannot be empty or null.");
+            return null;
+        }
+
+        Task result = project.getTasks()
+                            .stream()
+                            .filter(p -> p.getTitle().equalsIgnoreCase(searchText))
+                            .findFirst()
+                            .orElse(null);
+
+        if (result == null) {
+            view.printError(String.format("Task '%s' not found.", name));
         }
             
         return result;
