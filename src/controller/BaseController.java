@@ -6,6 +6,7 @@ import java.util.Set;
 import src.model.DefaultModel;
 import src.model.Model;
 import src.model.Project;
+import src.model.Task;
 import src.view.DefaultView;
 import src.view.View;
 
@@ -110,7 +111,9 @@ public abstract class BaseController implements Controller {
 
         for (String projectName : projectNames) {
             Project project = getProjectByName(projectName);
+
             if (project == null) { continue; }
+
             this.projects.remove(project);
             model.deleteProject(project);
             view.printMessage("Successfully deleted '%s'".formatted(project.getTitle()));
@@ -127,30 +130,37 @@ public abstract class BaseController implements Controller {
 
     @Override
     public void addTask(String projectName, String name, String description, String state) {
-        //TODO
-        System.out.println("Unimplemented method 'addTask'");
-    }
+        Project project = getProjectByName(projectName);
 
-    @Override
-    public void listTasks(String projectName, String filter) {
-        //TODO
-        System.out.println("Unimplemented method 'listTasks'");
-    }
+        if (project == null) { return; }
 
-    @Override
-    public void showTask(String projectName, String name) {
-        //TODO
-        System.out.println("Unimplemented method 'showTask'");
+        if (name == null || name.isBlank()) {
+            view.printError("Task name cannot be empty or null.");
+            return;
+        }
+
+        Task newTask = new Task(name, description, state, null);
+        project.addTasks(newTask);
+
+        model.saveProject(project);
+        view.printMessage(String.format("Task added [Project: %s, Name: %s, Desciption: %s, DueDate: %s]\n", projectName, name, description, null));
     }
 
     @Override
     public void editTask(String projectName, String newName, String description, String state) {
+        Project project = getProjectByName(projectName);
+        if (project == null) { return; }
+
+        model.saveProject(project);
         //TODO
         System.out.println("Unimplemented method 'editTask'");
     }
 
     @Override
     public void removeTasks(String projectName, Set<String> taskNames) {
+        Project project = getProjectByName(projectName);
+
+        model.saveProject(project);
         //TODO
         System.out.println("Unimplemented method 'removeTasks'");
     }
