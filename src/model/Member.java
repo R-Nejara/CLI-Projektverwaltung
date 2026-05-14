@@ -47,6 +47,6 @@ public class Member {
 
     @Override
     public String toString() {
-        return ""; //TODO
+        return "%s (%s)".formatted(name, role != null ? role : "-");
     }
 }
