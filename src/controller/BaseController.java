@@ -12,12 +12,12 @@ import src.view.View;
 
 public abstract class BaseController implements Controller {
     protected final View view = new DefaultView();
-    protected final Model model = new DefaultModel();
+    protected final Model model;
     private final List<Project> projects;
 
     protected  BaseController() {
-        this.projects = model.loadProjects();
-
+        this.model = new DefaultModel("filePath")
+        this.projects = this.model.loadProjects();
     }
 
 //-------------------------------------------------------------------------
