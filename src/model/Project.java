@@ -1,6 +1,7 @@
 package src.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -69,9 +70,21 @@ public class Project {
 // Section: Java methods
 //-------------------------------------------------------------------------
 
-    // Overrides
     @Override
     public String toString() {
-        return ""; //TODO
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        String due = (dueDate != null) ? dueDate.format(formatter) : "-";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("%s\n  Beschreibung: %s\n  Fällig: %s\n  Aufgaben (%d):".formatted(name, description != null ? description : "-", due, tasks.size()));
+
+        if (tasks.isEmpty()) {
+            sb.append("\n    Keine Aufgaben.");
+        } else {
+            for (Task task : tasks) {
+                sb.append("\n    ").append(task.toString().replace("\n", "\n    "));
+            }
+        }
+        return sb.toString();
     }
 }
