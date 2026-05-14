@@ -1,8 +1,10 @@
 package src.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Task {
     private String title;
@@ -34,7 +36,7 @@ public class Task {
 //-------------------------------------------------------------------------
 
     public void setTitle(String newTitle) {
-        if (newTitle != null && title.isBlank()) { return; } //TODO: Error handling
+        if (newTitle != null && newTitle.isBlank()) { return; } //TODO: Error handling
         this.title = newTitle;
     }
 
@@ -43,7 +45,7 @@ public class Task {
     }
 
     public void setState(State newState) {
-        this.state = (newState == null) ? this.state : state;
+        this.state = (newState == null) ? this.state : newState;
     }
 
     public void addAssignees(Member... newMembers) {
@@ -66,6 +68,10 @@ public class Task {
 
     @Override
     public String toString() {
-        return ""; //TODO
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        String due = (dueDate != null) ? dueDate.format(formatter) : "-";
+        String assigned = assignees.isEmpty() ? "-" : assignees.stream().map(Member::getName).collect(Collectors.joining(", "));
+
+        return "[%s] %s\n  Beschreibung: %s\n  Fällig: %s\n  Zugewiesen: %s".formatted(state, title, description != null ? description : "-", due, assigned);
     }
 }
