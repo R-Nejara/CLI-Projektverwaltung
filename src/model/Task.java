@@ -21,6 +21,14 @@ public class Task {
         this.dueDate = dueDate;
     }
 
+    public Task(String title, String description, String state, LocalDateTime dueDate) {
+        this.title = title;
+        this.description = description;
+        this.state = (state == null) ? State.OPEN : parseState(state);
+        this.dueDate = dueDate;
+
+    }
+
 //-------------------------------------------------------------------------
 // Section: Getter
 //-------------------------------------------------------------------------
@@ -44,8 +52,8 @@ public class Task {
         this.description = newDesciption;
     }
 
-    public void setState(State newState) {
-        this.state = (newState == null) ? this.state : newState;
+    public void setState(String newState) {
+        this.state = (newState == null) ? this.state : parseState(newState);
     }
 
     public void addAssignees(Member... newMembers) {
@@ -60,6 +68,18 @@ public class Task {
 
     public void setDueDate(LocalDateTime newDueDate) {
         this.dueDate = (newDueDate == null) ? this.dueDate : newDueDate;
+    }
+
+//-------------------------------------------------------------------------
+// Section: private functions
+//-------------------------------------------------------------------------
+
+    private State parseState(String input) {
+        try {
+            return State.valueOf(input.toUpperCase());
+        } catch (Exception e) {
+            return State.OPEN;
+        }
     }
 
 //-------------------------------------------------------------------------
