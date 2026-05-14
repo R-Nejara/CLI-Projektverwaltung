@@ -1,0 +1,23 @@
+package src.commands.Task;
+
+import src.commands.BaseCommand;
+import src.commands.Command;
+import src.controller.Controller;
+
+public class HelpTaskCommand extends BaseCommand {
+    private final Command command;
+    public HelpTaskCommand(Controller controller, Command command) {
+        super(controller, "help", "h", 1);
+        this.command = command;
+    }
+
+    @Override
+    public void execute(String[] args) {
+        System.out.println(command.toString());
+    }
+
+    @Override 
+    public String toString() {
+        return "\t%s | %s\n".formatted(super.getKey(), super.getShortcut());
+    }
+}

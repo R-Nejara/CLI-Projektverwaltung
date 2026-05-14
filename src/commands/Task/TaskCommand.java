@@ -1,6 +1,7 @@
 package src.commands.Task;
 
 import src.commands.BaseCommand;
+import src.commands.Project.HelpProjectCommand;
 import src.controller.Controller;
 
 public class TaskCommand extends BaseCommand {
@@ -9,5 +10,6 @@ public class TaskCommand extends BaseCommand {
         super.registerSubCommand(new AddTaskCommand(controller));
         super.registerSubCommand(new EditTaskCommand(controller));
         super.registerSubCommand(new RemoveTaskCommand(controller));
+        super.registerSubCommand(new HelpTaskCommand(controller, this));
     }
 }
