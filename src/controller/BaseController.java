@@ -203,6 +203,29 @@ public abstract class BaseController implements Controller {
         }
     }
 
+
+//-------------------------------------------------------------------------
+// Section: Assignee/Member
+//-------------------------------------------------------------------------
+
+    @Override
+    public void addAssignee(String projectName, String taskName, String name, String role) {
+        //TODO
+        System.out.println("Unimplemented method 'addAssignee'");
+    }
+
+    @Override
+    public void editAssignee(String projectName, String taskName, String name, String role) {
+        //TODO
+        System.out.println("Unimplemented method 'editAssignee'");
+    }
+
+    @Override
+    public void removeAssignees(String projectName, String taskName, Set<String> assigneeNames) {
+        //TODO
+        System.out.println("Unimplemented method 'removeAssignees'");
+    }
+
 //-------------------------------------------------------------------------
 // Section: private functions
 //-------------------------------------------------------------------------
