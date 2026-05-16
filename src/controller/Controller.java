@@ -29,6 +29,6 @@ public interface Controller {
 //-------------------------------------------------------------------------
 
     public void addAssignee(String projectName, String taskName, String name, String role);
-    public void editAssignee(String projectName, String taskName, String name, String role);
+    public void editAssignee(String projectName, String taskName, String memberName, String name, String role);
     public void removeAssignees(String projectName, String taskName, Set<String> assigneeNames);
 }

@@ -215,7 +215,7 @@ public abstract class BaseController implements Controller {
     }
 
     @Override
-    public void editAssignee(String projectName, String taskName, String name, String role) {
+    public void editAssignee(String projectName, String taskName, String memberName, String name, String role) {
         //TODO
         System.out.println("Unimplemented method 'editAssignee'");
     }
