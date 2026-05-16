@@ -95,8 +95,16 @@ public abstract class BaseCommand implements Command {
 //-------------------------------------------------------------------------
 
     protected String[] getSubArgs(String[] args) {
+        return getSubArgs(args, 1);
+    }
+
+    protected String[] getSubArgs(String[] args, int preArgsCount) {
         if (args.length < 1) { return new String[0]; }
-        return Arrays.copyOfRange(args, 1, args.length);
+        return Arrays.copyOfRange(
+            args, 
+            (preArgsCount > 0) ? preArgsCount : 1,
+            args.length
+        );
     }
 
     protected void registerSubCommand(Command command) {
