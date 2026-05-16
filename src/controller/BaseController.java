@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import src.model.DefaultModel;
+import src.model.Member;
 import src.model.Model;
 import src.model.Project;
 import src.model.Task;
@@ -216,8 +217,32 @@ public abstract class BaseController implements Controller {
 
     @Override
     public void editAssignee(String projectName, String taskName, String memberName, String name, String role) {
-        //TODO
-        System.out.println("Unimplemented method 'editAssignee'");
+        Boolean projectUpdated = false;
+        Project project = getProjectByName(projectName);
+        if (project == null) { return; }
+
+        Task task = getTaskByName(project, taskName);
+        if (task == null) { return; }
+
+        Member member = getAssigneeByName(getTaskByName(getProjectByName(projectName), taskName), memberName);
+        if (member == null) { return; }
+
+        if (name != null && !name.isBlank() && !name.equals(member.getName())) {
+            member.setName(name);
+            projectUpdated = true;
+        }
+
+        if (role != null && !role.isBlank() && !role.equals(member.getRole())) {
+            member.setRole(role);
+            projectUpdated = true;
+        }
+
+        if (projectUpdated) {
+            model.saveProject(project);
+            view.printMessage("Member '%s' successfully updated.".formatted(member.getName()));
+        } else {
+            view.printWarning("Nothing was updated.");
+        }   
     }
 
     @Override
@@ -255,7 +280,7 @@ public abstract class BaseController implements Controller {
         String searchText = (name != null && !name.isBlank()) ? name.toLowerCase() : null;
 
         if (project == null) { 
-            view.printError("Project name cannot be empty or null.");
+            view.printError("Project cannot be null.");
             return null;
         }
 
@@ -267,6 +292,32 @@ public abstract class BaseController implements Controller {
         Task result = project.getTasks()
                             .stream()
                             .filter(p -> p.getTitle().equalsIgnoreCase(searchText))
+                            .findFirst()
+                            .orElse(null);
+
+        if (result == null) {
+            view.printError(String.format("Task '%s' not found.", name));
+        }
+            
+        return result;
+    }
+
+    private Member getAssigneeByName(Task task, String name) {
+        String searchText = (name != null && !name.isBlank()) ? name.toLowerCase() : null;
+
+        if (task == null) { 
+            view.printError("Task cannot be null.");
+            return null;
+        }
+
+        if (searchText == null) {
+            view.printError("Assignee name cannot be empty or null.");
+            return null;
+        }
+
+        Member result = task.getAssignees()
+                            .stream()
+                            .filter(p -> p.getName().equalsIgnoreCase(searchText))
                             .findFirst()
                             .orElse(null);
 
