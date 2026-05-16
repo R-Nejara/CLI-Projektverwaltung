@@ -194,7 +194,7 @@ public abstract class BaseController implements Controller {
             if (task == null) { continue; }
             
             project.removeTasks(task);
-            view.printMessage("Successfully deleted '%s'".formatted(project.getTitle()));
+            view.printMessage("Successfully deleted '%s'".formatted(task.getTitle()));
         }
 
         if (project.getTasks().size() >= taskCount) {
@@ -261,8 +261,28 @@ public abstract class BaseController implements Controller {
 
     @Override
     public void removeAssignees(String projectName, String taskName, Set<String> assigneeNames) {
-        //TODO
-        System.out.println("Unimplemented method 'removeAssignees'");
+        Project project = getProjectByName(projectName);
+        if (project == null) { return; }
+
+        Task task = getTaskByName(project, taskName);
+        if (task == null) { return; }
+
+        Integer taskCount = task.getAssignees().size();
+
+        for (String assigneeName : assigneeNames) {
+            Member member = getAssigneeByName(task, assigneeName);
+
+            if (member == null) { continue; }
+            
+            task.removeAssignees(member);
+            view.printMessage("Successfully deleted '%s'".formatted(member.getName()));
+        }
+
+        if (task.getAssignees().size() >= taskCount) {
+            view.printWarning("No members deleted.");
+        } else {
+            model.saveProject(project);
+        }
     }
 
 //-------------------------------------------------------------------------
