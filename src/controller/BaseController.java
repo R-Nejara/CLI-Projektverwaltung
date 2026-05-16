@@ -211,8 +211,22 @@ public abstract class BaseController implements Controller {
 
     @Override
     public void addAssignee(String projectName, String taskName, String name, String role) {
-        //TODO
-        System.out.println("Unimplemented method 'addAssignee'");
+        Project project = getProjectByName(projectName);
+        if (project == null) { return; }
+
+        Task task = getTaskByName(project, taskName);
+        if (task == null) { return; }
+
+        if (name == null || name.isBlank()) {
+            view.printError("Member name cannot be empty or null.");
+            return;
+        }
+
+        Member newMember = new Member(name, role);
+        task.addAssignees(newMember);
+
+        model.saveProject(project);
+        view.printMessage(String.format("Assignee added [Project: %s, Task: %s, Name: %s, Role: %s]\n", projectName, taskName, name, role));
     }
 
     @Override
