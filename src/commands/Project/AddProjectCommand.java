@@ -34,7 +34,7 @@ public class AddProjectCommand extends BaseCommand {
     @Override 
     public String toString() {
         return """
-            \t%s | %s [--n <name>] [--d <desc>] [--t <date>]
+            \t%s | %s --n <name> [--d <desc>] [--t <date>]
             \t  --n <name>        Set the project name
             \t  --d <description> Set the project description (optional)
             \t  --t <dueDate>     Set a due date (Format: dd.MM.yyyy [HH:mm])

@@ -36,7 +36,7 @@ public class AddTaskCommand extends BaseCommand {
     @Override 
     public String toString() {
         return """
-            \t%s | %s <projectName> [--n <name>] [--d <desc>] [--t <state>] [--t <date>]
+            \t%s | %s <projectName> --n <name> [--d <desc>] [--t <state>] [--t <date>]
             \t  --n <name>        Set the task name
             \t  --d <description> Set the task description (optional)
             \t  --s <state>       Set the task state (optional)
