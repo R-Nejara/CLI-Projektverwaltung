@@ -36,7 +36,7 @@ public abstract class BaseController implements Controller {
         }
 
         Project newProject = new Project(name, description, dueDate);
-        projects.add(newProject);
+        this.projects.add(newProject);
         model.saveProject(newProject);
 
         view.printMessage(String.format("Project added [Name: %s, Desciption: %s, DueDate: %s]\n", name, description, dueDate));
@@ -186,6 +186,7 @@ public abstract class BaseController implements Controller {
     @Override
     public void removeTasks(String projectName, Set<String> taskNames) {
         Project project = getProjectByName(projectName);
+        if (project == null) { return; }
         Integer taskCount = project.getTasks().size();
 
         for (String taskName : taskNames) {
