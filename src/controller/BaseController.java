@@ -78,19 +78,19 @@ public abstract class BaseController implements Controller {
             projectUpdated = true;
         }
 
-        if (description != null && !description.isBlank() && !description.equals(project.getDescription())) {
+        if (description != null && !description.equals(project.getDescription())) {
             project.setDescription(description);
             projectUpdated = true;
         }
 
-        if (dueDate != null && dueDate.equals(project.getDueDate())) {
+        if (dueDate != null && !dueDate.equals(project.getDueDate())) {
             project.setDueDate(dueDate);
             projectUpdated = true;
         }
 
         if (projectUpdated) {
             model.saveProject(project);
-            view.printMessage("Project '%s' successfully updated.".formatted(project.getTitle()));
+            view.printMessage("Project '%s' successfully updated.".formatted(name));
         } else {
             view.printWarning("Nothing was updated.");
         }        
