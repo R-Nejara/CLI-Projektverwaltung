@@ -16,7 +16,7 @@ public abstract class BaseController implements Controller {
     private final List<Project> projects;
 
     protected  BaseController() {
-        this.model = new DefaultModel("filePath")
+        this.model = new DefaultModel("filePath");
         this.projects = this.model.loadProjects();
     }
 
