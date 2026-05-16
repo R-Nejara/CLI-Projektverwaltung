@@ -121,7 +121,7 @@ public abstract class BaseCommand implements Command {
             if (!isFlag(arg)) { continue; }
 
             String flag = !arg.isBlank() ? arg : null;
-            String value = !args[i+1].isBlank() ? args[i+1] : null;
+            String value = args[i+1];
             
             if (flag != null && value != null) { 
                 flag = flag.replaceAll(BaseCommand.FLAG_SYMBOL, "");
