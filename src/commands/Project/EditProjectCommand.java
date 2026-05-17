@@ -12,7 +12,7 @@ public class EditProjectCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        final String name = (args.length > 0) ? args[0] : null;
+        final String name = super.getArg(args, 0);
         String newName = null, description = null;
         LocalDateTime dueDate = null;
 

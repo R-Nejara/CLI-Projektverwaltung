@@ -11,8 +11,8 @@ public class AddMemberCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        final String projectName = (args.length > 0) ? args[0] : null;
-        final String taskName = (args.length > 1) ? args[1] : null;
+        final String projectName = super.getArg(args, 0);
+        final String taskName = super.getArg(args, 1);
         String name = null, role = null;
 
         Map<String, String> flags = super.getFlags(args);

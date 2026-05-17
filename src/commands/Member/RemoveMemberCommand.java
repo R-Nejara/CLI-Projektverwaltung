@@ -11,8 +11,8 @@ public class RemoveMemberCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        String projectName = (args.length > 0) ? args[0] : null;
-        String taskName = (args.length > 1) ? args[1] : null;
+        String projectName = super.getArg(args, 0);
+        String taskName = super.getArg(args, 1);
         String[] memberNames = super.getSubArgs(args, 2);
 
         controller.removeAssignees(projectName, taskName, Set.of(memberNames));

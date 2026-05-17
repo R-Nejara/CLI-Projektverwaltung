@@ -11,7 +11,7 @@ public class RemoveTaskCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        String projectName = (args.length > 0) ? args[0] : null;
+        String projectName = super.getArg(args, 0);
         String[] taskNames = super.getSubArgs(args);
 
         controller.removeTasks(projectName, Set.of(taskNames));

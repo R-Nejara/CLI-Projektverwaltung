@@ -12,7 +12,7 @@ public class AddTaskCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        final String projectName = (args.length > 0) ? args[0] : null;
+        final String projectName = super.getArg(args, 0);
         String name = null, description = null, state = null;
         LocalDateTime dueDate = null;
 

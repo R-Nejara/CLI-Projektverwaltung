@@ -94,6 +94,19 @@ public abstract class BaseCommand implements Command {
 // Section: Protected functions
 //-------------------------------------------------------------------------
 
+    protected String getArg(String[] args, Integer index) {
+        if (args == null || index == null || index < 0 || index >= args.length) {
+            return null;
+        }
+        String arg = args[index];
+
+        if (arg != null && !arg.isBlank() && Character.isLetter(arg.charAt(0))) {
+            return arg;
+        }
+
+        return null;
+    }
+
     protected String[] getSubArgs(String[] args) {
         return getSubArgs(args, 1);
     }

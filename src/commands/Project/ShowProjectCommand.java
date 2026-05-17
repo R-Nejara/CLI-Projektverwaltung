@@ -10,7 +10,7 @@ public class ShowProjectCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        String name = (args.length > 0) ? args[0] : null;
+        String name = super.getArg(args, 0);
 
         controller.showProject(name);
     }
