@@ -27,21 +27,18 @@ public abstract class BaseController implements Controller {
 
     @Override
     public void addProject(String name, String description, LocalDateTime dueDate) {
-        List<String> projectNames = this.projects.stream().map(p -> p.getTitle()).toList();
-
         if (name == null || name.isBlank()) {
             view.printError("Project name cannot be empty or null.");
             return;
-        } else if (isNameUnique(name, projectNames)) {
-            view.printError(String.format("A project with the name '%s' already exists.", name));
+        } else if (!isNameUnique(name, getProjectNames())) {
+            view.printError("A project with the name '%s' already exists.".formatted(name));
             return;
         }
 
         Project newProject = new Project(name, description, dueDate);
         this.projects.add(newProject);
         model.saveProject(newProject);
-
-        view.printMessage(String.format("Project added [Name: %s, Description: %s, DueDate: %s]\n", name, description, dueDate));
+        view.printMessage("Project added [Name: %s, Description: %s, DueDate: %s]".formatted(name, description, dueDate));
     }
 
     @Override
@@ -53,7 +50,7 @@ public abstract class BaseController implements Controller {
                                         .toList();
 
         if (results == null || results.isEmpty()) {
-            view.printWarning(String.format("No projects found."));
+            view.printWarning("No projects found.");
             return;
         }
 
@@ -75,7 +72,10 @@ public abstract class BaseController implements Controller {
 
         if (project == null) { return; } 
 
-        if (newName != null && !newName.isBlank() && !newName.equals(project.getTitle())) {
+        if (newName != null && !isNameUnique(newName, getProjectNames())) {
+            view.printError("A project with the name '%s' already exists.".formatted(newName));
+            return;
+        } else if (newName != null && !newName.isBlank() && !newName.equals(project.getTitle())) {
             project.setName(newName);
             projectUpdated = true;
         }
@@ -139,13 +139,15 @@ public abstract class BaseController implements Controller {
         if (name == null || name.isBlank()) {
             view.printError("Task name cannot be empty or null.");
             return;
+        } else if (!isNameUnique(name, getTaskNames(project))) {
+            view.printError("A task with the name '%s' already exists in project '%s'.".formatted(name, projectName));
+            return;
         }
 
         Task newTask = new Task(name, description, state, dueDate);
         project.addTasks(newTask);
-
         model.saveProject(project);
-        view.printMessage(String.format("Task added [Project: %s, Name: %s, Desciption: %s, DueDate: %s]\n", projectName, name, description, dueDate));
+        view.printMessage("Task added [Project: %s, Name: %s, Description: %s, DueDate: %s]".formatted(projectName, name, description, dueDate));
     }
 
     @Override
@@ -223,13 +225,15 @@ public abstract class BaseController implements Controller {
         if (name == null || name.isBlank()) {
             view.printError("Member name cannot be empty or null.");
             return;
+        } else if (!isNameUnique(name, getAssigneeNames(task))) {
+            view.printError("A member with the name '%s' already exists in task '%s'.".formatted(name, taskName));
+            return;
         }
 
         Member newMember = new Member(name, role);
         task.addAssignees(newMember);
-
         model.saveProject(project);
-        view.printMessage(String.format("Assignee added [Project: %s, Task: %s, Name: %s, Role: %s]\n", projectName, taskName, name, role));
+        view.printMessage("Assignee added [Project: %s, Task: %s, Name: %s, Role: %s]".formatted(projectName, taskName, name, role));
     }
 
     @Override
@@ -238,10 +242,7 @@ public abstract class BaseController implements Controller {
         Project project = getProjectByName(projectName);
         if (project == null) { return; }
 
-        Task task = getTaskByName(project, taskName);
-        if (task == null) { return; }
-
-        Member member = getAssigneeByName(getTaskByName(getProjectByName(projectName), taskName), memberName);
+        Member member = getAssigneeByName(project, taskName, memberName);
         if (member == null) { return; }
 
         if (name != null && !name.isBlank() && !name.equals(member.getName())) {
@@ -273,7 +274,7 @@ public abstract class BaseController implements Controller {
         Integer taskCount = task.getAssignees().size();
 
         for (String assigneeName : assigneeNames) {
-            Member member = getAssigneeByName(task, assigneeName);
+            Member member = getAssigneeByName(project, taskName, assigneeName);
 
             if (member == null) { continue; }
             
@@ -291,6 +292,24 @@ public abstract class BaseController implements Controller {
 //-------------------------------------------------------------------------
 // Section: private functions
 //-------------------------------------------------------------------------
+
+    private List<String> getProjectNames() {
+        return this.projects.stream()
+                .map(p -> p.getTitle())
+                .toList();
+    }
+
+    private List<String> getTaskNames(Project project) {
+        return project.getTasks().stream()
+                .map(t -> t.getTitle())
+                .toList();
+    }
+
+    private List<String> getAssigneeNames(Task task) {
+        return task.getAssignees().stream()
+                .map(a -> a.getName())
+                .toList();
+    }
 
     private Boolean isNameUnique(String name, List<String> names) {
         if (name == null || name.isBlank()) { return false; }
@@ -339,28 +358,24 @@ public abstract class BaseController implements Controller {
         return result;
     }
 
-    private Member getAssigneeByName(Task task, String name) {
-        String searchText = (name != null && !name.isBlank()) ? name.toLowerCase() : null;
+    private Member getAssigneeByName(Project project, String taskName, String name) {
+        Task task = getTaskByName(project, taskName);
+        if (task == null) { return null; }
 
-        if (task == null) { 
-            view.printError("Task cannot be null.");
-            return null;
-        }
-
-        if (searchText == null) {
+        if (name == null || name.isBlank()) {
             view.printError("Assignee name cannot be empty or null.");
             return null;
         }
 
         Member result = task.getAssignees().stream()
-                            .filter(p -> p.getName().equalsIgnoreCase(searchText))
+                            .filter(p -> p.getName().equalsIgnoreCase(name))
                             .findFirst()
                             .orElse(null);
 
         if (result == null) {
             view.printError("Assignee '%s' not found.".formatted(name));
         }
-        
+
         return result;
     }
 }
