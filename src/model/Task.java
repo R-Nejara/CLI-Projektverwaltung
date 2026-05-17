@@ -90,7 +90,7 @@ public class Task {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         String due = (dueDate != null) ? dueDate.format(formatter) : "-";
-        String assigned = assignees.isEmpty() ? "-" : assignees.stream().map(Member::getName).collect(Collectors.joining(", "));
+        String assigned = assignees.isEmpty() ? "-" : assignees.stream().map(m -> "%s (%s)".formatted(m.getName(), m.getRole())).collect(Collectors.joining(", "));
 
         return "[%s] %s\n  Beschreibung: %s\n  Fällig: %s\n  Zugewiesen: %s".formatted(state, title, description != null ? description : "-", due, assigned);
     }
