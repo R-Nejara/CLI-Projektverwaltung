@@ -1,12 +1,13 @@
 package src.model;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultModel implements Model {
-    private String filePath;
+    private Path filePath;
 
-    public DefaultModel(String filePath) {
+    public DefaultModel(Path filePath) {
         this.filePath = filePath;
     }
     
