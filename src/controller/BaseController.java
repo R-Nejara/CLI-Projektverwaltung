@@ -1,6 +1,5 @@
 package src.controller;
 
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -18,9 +17,7 @@ public abstract class BaseController implements Controller {
     private final List<Project> projects;
 
     protected  BaseController() {
-        final String home = System.getProperty("user.home");
-        this.model = new DefaultModel(Paths.get(home, ".cli_projektverwaltung_data"));
-
+        this.model = new DefaultModel("projects.txt");
         this.projects = this.model.loadProjects();
     }
 
