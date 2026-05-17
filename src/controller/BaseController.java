@@ -27,11 +27,13 @@ public abstract class BaseController implements Controller {
 
     @Override
     public void addProject(String name, String description, LocalDateTime dueDate) {
-        Project similaProject = getProjectByName(name);
-        if (similaProject != null) {
-            view.printError(String.format("A project with the name '%s' already exists.", name));
+        List<String> projectNames = this.projects.stream().map(p -> p.getTitle()).toList();
+
+        if (name == null || name.isBlank()) {
+            view.printError("Project name cannot be empty or null.");
             return;
-        } else if ((similaProject == null && name == null)) {
+        } else if (isNameUnique(name, projectNames)) {
+            view.printError(String.format("A project with the name '%s' already exists.", name));
             return;
         }
 
@@ -39,7 +41,7 @@ public abstract class BaseController implements Controller {
         this.projects.add(newProject);
         model.saveProject(newProject);
 
-        view.printMessage(String.format("Project added [Name: %s, Desciption: %s, DueDate: %s]\n", name, description, dueDate));
+        view.printMessage(String.format("Project added [Name: %s, Description: %s, DueDate: %s]\n", name, description, dueDate));
     }
 
     @Override
@@ -290,48 +292,48 @@ public abstract class BaseController implements Controller {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-    private Project getProjectByName(String name) {
-        String searchText = (name != null && !name.isBlank()) ? name.toLowerCase() : null;
+    private Boolean isNameUnique(String name, List<String> names) {
+        if (name == null || name.isBlank()) { return false; }
 
-        if (searchText == null) {
+        return names.stream().noneMatch(n -> n.equalsIgnoreCase(name));
+    }
+
+    private Project getProjectByName(String name) {
+        if (name == null || name.isBlank()) {
             view.printError("Project name cannot be empty or null.");
             return null;
         }
 
-        Project result = this.projects
-                            .stream()
-                            .filter(p -> p.getTitle().equalsIgnoreCase(searchText))
+        Project result = this.projects.stream()
+                            .filter(p -> p.getTitle().equalsIgnoreCase(name))
                             .findFirst()
                             .orElse(null);
 
         if (result == null) {
-            view.printError(String.format("Project '%s' not found.", name));
+            view.printError("Project '%s' not found.".formatted(name));
         }
             
         return result;
     }
 
     private Task getTaskByName(Project project, String name) {
-        String searchText = (name != null && !name.isBlank()) ? name.toLowerCase() : null;
-
         if (project == null) { 
             view.printError("Project cannot be null.");
             return null;
         }
 
-        if (searchText == null) {
+        if (name == null || name.isBlank()) {
             view.printError("Task name cannot be empty or null.");
             return null;
         }
 
-        Task result = project.getTasks()
-                            .stream()
-                            .filter(p -> p.getTitle().equalsIgnoreCase(searchText))
+        Task result = project.getTasks().stream()
+                            .filter(p -> p.getTitle().equalsIgnoreCase(name))
                             .findFirst()
                             .orElse(null);
 
         if (result == null) {
-            view.printError(String.format("Task '%s' not found.", name));
+            view.printError("Task '%s' not found.".formatted(name));
         }
             
         return result;
@@ -350,16 +352,15 @@ public abstract class BaseController implements Controller {
             return null;
         }
 
-        Member result = task.getAssignees()
-                            .stream()
+        Member result = task.getAssignees().stream()
                             .filter(p -> p.getName().equalsIgnoreCase(searchText))
                             .findFirst()
                             .orElse(null);
 
         if (result == null) {
-            view.printError(String.format("Task '%s' not found.", name));
+            view.printError("Assignee '%s' not found.".formatted(name));
         }
-            
+        
         return result;
     }
 }
