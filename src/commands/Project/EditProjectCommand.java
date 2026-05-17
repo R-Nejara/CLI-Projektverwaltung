@@ -36,7 +36,7 @@ public class EditProjectCommand extends BaseCommand {
     @Override 
     public String toString() {
         return """
-            \t%s | %s <name> [--n <name>] [--d <desc>] [--t <date>]
+            \t%s | %s <name> [--n <newName>] [--d <desc>] [--t <date>]
             \t  --n <name>        Update the project name (optional)
             \t  --d <description> Update the project description (optional)
             \t  --t <dueDate>     Update the due date (Format: dd.MM.yyyy [HH:mm])
