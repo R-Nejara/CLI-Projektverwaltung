@@ -36,6 +36,9 @@ public abstract class BaseController implements Controller {
         } else if (!isNameUnique(name, getProjectNames())) {
             view.printError("A project with the name '%s' already exists.".formatted(name));
             return;
+        } else if (!startsWithValidSymbol(name)) {
+            view.printError("Project name must start with a letter.");
+            return;
         }
 
         Project newProject = new Project(name, description, dueDate);
@@ -77,6 +80,9 @@ public abstract class BaseController implements Controller {
 
         if (newName != null && !isNameUnique(newName, getProjectNames())) {
             view.printError("A project with the name '%s' already exists.".formatted(newName));
+            return;
+        } else if (newName != null && !startsWithValidSymbol(newName)) {
+            view.printError("Project name must start with a letter.");
             return;
         } else if (newName != null && !newName.isBlank() && !newName.equals(project.getTitle())) {
             project.setName(newName);
@@ -145,6 +151,9 @@ public abstract class BaseController implements Controller {
         } else if (!isNameUnique(name, getTaskNames(project))) {
             view.printError("A task with the name '%s' already exists in project '%s'.".formatted(name, projectName));
             return;
+        } else if (!startsWithValidSymbol(name)) {
+            view.printError("Task name must start with a letter.");
+            return;
         }
 
         Task newTask = new Task(name, description, state, dueDate);
@@ -162,7 +171,18 @@ public abstract class BaseController implements Controller {
         Task task = getTaskByName(project, taskName);
         if (task == null) { return; } 
 
-        if (newName != null && !newName.isBlank() && !newName.equals(task.getTitle())) {
+        if (newName == null || newName.isBlank()) {
+            view.printError("Member name cannot be empty or null.");
+            return;
+        } else if (!isNameUnique(newName, getAssigneeNames(task))) {
+            view.printError("A member with the name '%s' already exists in task '%s'.".formatted(newName, taskName));
+            return;
+        } else if (!startsWithValidSymbol(newName)) {
+            view.printError("Member name must start with a letter.");
+            return;
+        }
+
+        if (!newName.isBlank() && !newName.equals(task.getTitle())) {
             task.setTitle(newName);
             projectUpdated = true;
         }
@@ -230,6 +250,9 @@ public abstract class BaseController implements Controller {
             return;
         } else if (!isNameUnique(name, getAssigneeNames(task))) {
             view.printError("A member with the name '%s' already exists in task '%s'.".formatted(name, taskName));
+            return;
+        } else if (!startsWithValidSymbol(name)) {
+            view.printError("Member name must start with a letter.");
             return;
         }
 
@@ -318,6 +341,12 @@ public abstract class BaseController implements Controller {
         if (name == null || name.isBlank()) { return false; }
 
         return names.stream().noneMatch(n -> n.equalsIgnoreCase(name));
+    }
+
+    private Boolean startsWithValidSymbol(String input) {
+        if (input == null || input.isBlank()) { return false; }
+
+        return Character.isLetter(input.charAt(0));
     }
 
     private Project getProjectByName(String name) {
