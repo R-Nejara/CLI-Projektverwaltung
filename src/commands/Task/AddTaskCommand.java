@@ -13,7 +13,7 @@ public class AddTaskCommand extends BaseCommand {
     @Override
     public void execute(String[] args) {
         final String projectName = super.getArg(args, 0);
-        String name = null, description = null, state = null;
+        String name = null, description = null, state = null, priority = null;
         LocalDateTime dueDate = null;
 
         Map<String, String> flags = super.getFlags(args);
@@ -25,21 +25,23 @@ public class AddTaskCommand extends BaseCommand {
             switch (key) {
                 case "n" -> name = value;
                 case "d" -> description = value;
-                case "s" -> state = value; 
-                case "t" -> dueDate = super.parseDateTime(value); 
+                case "s" -> state = value;
+                case "p" -> priority = value;
+                case "t" -> dueDate = super.parseDateTime(value);
                 default -> {}
             }
         }
-        controller.addTask(projectName, name, description, state, dueDate);
+        controller.addTask(projectName, name, description, state, priority,dueDate);
     }
 
     @Override 
     public String toString() {
         return """
-            \t%s | %s <projectName> --n <name> [--d <desc>] [--s <state>] [--t <date>]
+            \t%s | %s <projectName> --n <name> [--d <desc>] [--s <state>] [--p <priority>] [--t <date>]
             \t  --n <name>        Set the task name
             \t  --d <description> Set the task description (optional)
             \t  --s <state>       Set the task state (optional)
+            \t  --p <priority>    Set the task priority (optional)
             \t  --t <dueDate>     Set a due date (Format: dd.MM.yyyy [HH:mm])
             """.formatted(super.getKey(), super.getShortcut());
     }

@@ -20,8 +20,8 @@ public interface Controller {
 // Section: Task
 //-------------------------------------------------------------------------
 
-    public void addTask(String projectName, String name, String description, String state, LocalDateTime dueDate);
-    public void editTask(String projectName, String taskName, String newName, String description, String state, LocalDateTime dueDate);
+    public void addTask(String projectName, String name, String description, String state, String priority, LocalDateTime dueDate);
+    public void editTask(String projectName, String taskName, String newName, String description, String state, String priority, LocalDateTime dueDate);
     public void removeTasks(String projectName, Set<String> taskNames);
 
 //-------------------------------------------------------------------------

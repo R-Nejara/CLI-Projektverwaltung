@@ -68,13 +68,38 @@ public class DefaultModel implements Model {
         StringBuilder sb = new StringBuilder();
 
         for(Project project : projects){
-            sb.append(PROJECT_PREFIX).append(SEP).append(project.getId()).append(SEP).append(encode(project.getTitle())).append(SEP).append(encode(project.getDescription())).append(SEP).append(encodeDate(project.getDueDate())).append("\n");
+            sb.append(PROJECT_PREFIX)
+                .append(SEP)
+                .append(project.getId())
+                .append(SEP)
+                .append(encode(project.getTitle()))
+                .append(SEP)
+                .append(encode(project.getDescription()))
+                .append(SEP)
+                .append(encodeDate(project.getDueDate()))
+                .append("\n");
 
             for(Task task : project.getTasks()){
-                sb.append(TASK_PREFIX).append(SEP).append(encode(task.getTitle())).append(SEP).append(encode(task.getDescription())).append(SEP).append(task.getState().name()).append(SEP).append(encodeDate(task.getDueDate())).append("\n");
+                sb.append(TASK_PREFIX)
+                    .append(SEP)
+                    .append(encode(task.getTitle()))
+                    .append(SEP)
+                    .append(encode(task.getDescription()))
+                    .append(SEP)
+                    .append(task.getState().name())
+                    .append(SEP)
+                    .append(task.getPriority().name())
+                    .append(SEP)
+                    .append(encodeDate(task.getDueDate()))
+                    .append("\n");
 
                 for(Member member : task.getAssignees()){
-                    sb.append(MEMBER_PREFIX).append(SEP).append(encode(member.getName())).append(SEP).append(encode(member.getRole())).append("\n");
+                    sb.append(MEMBER_PREFIX)
+                        .append(SEP)
+                        .append(encode(member.getName()))
+                        .append(SEP)
+                        .append(encode(member.getRole()))
+                        .append("\n");
                 }
             }
             sb.append(PROJECT_DIVIDER).append("\n");
@@ -118,10 +143,10 @@ public class DefaultModel implements Model {
                     currentTask = null;
                 }
                 case TASK_PREFIX -> {
-                    if(parts.length < 5 || currentProject == null){ 
+                    if(parts.length < 6 || currentProject == null){ 
                         continue; 
                     }
-                    currentTask = new Task( decode(parts[1]), decode(parts[2]), parts[3], decodeDate(parts[4]) );
+                    currentTask = new Task( decode(parts[1]), decode(parts[2]), decode(parts[3]), parts[4], decodeDate(parts[5]) );
                     currentProject.addTasks(currentTask);
                 }
                 case MEMBER_PREFIX -> {

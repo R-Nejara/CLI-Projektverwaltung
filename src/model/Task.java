@@ -10,21 +10,24 @@ public class Task {
     private String title;
     private String description;
     private State state;
+    private Priority priority;
     private List<Member> assignees = new ArrayList<>();
     private LocalDateTime dueDate;
 
-    public Task(String title, String description, State state, List<Member> assignees, LocalDateTime dueDate) {
+    public Task(String title, String description, State state, Priority priority, List<Member> assignees, LocalDateTime dueDate) {
         this.title = title;
         this.description = description;
         this.state = (state == null) ? State.OPEN : state;
+        this.priority = (priority == null) ? Priority.MEDIUM : priority;
         this.assignees = assignees;
         this.dueDate = dueDate;
     }
 
-    public Task(String title, String description, String state, LocalDateTime dueDate) {
+    public Task(String title, String description, String state, String priority, LocalDateTime dueDate) {
         this.title = title;
         this.description = description;
         this.state = (state == null) ? State.OPEN : parseState(state);
+        this.priority = (priority == null) ? Priority.MEDIUM : parsePriority(priority);
         this.dueDate = dueDate;
 
     }
@@ -36,6 +39,7 @@ public class Task {
     public String getTitle() { return this.title; }
     public String getDescription() { return this.description; }
     public State getState() { return this.state; }
+    public Priority getPriority() { return this.priority; }
     public List<Member> getAssignees() { return this.assignees; }
     public LocalDateTime getDueDate() { return this.dueDate; }
 
@@ -54,6 +58,10 @@ public class Task {
 
     public void setState(String newState) {
         this.state = (newState == null) ? this.state : parseState(newState);
+    }
+
+    public void setPriority(String newPriority) {
+        this.priority = (newPriority == null) ? this.priority : parsePriority(newPriority);
     }
 
     public void addAssignees(Member... newMembers) {
@@ -82,6 +90,14 @@ public class Task {
         }
     }
 
+    private Priority parsePriority(String input) {
+        try {
+            return Priority.valueOf(input.toUpperCase());
+        } catch (Exception e) {
+            return Priority.MEDIUM;
+        }
+    }
+
 //-------------------------------------------------------------------------
 // Section: Java methods
 //-------------------------------------------------------------------------
@@ -92,6 +108,6 @@ public class Task {
         String due = (dueDate != null) ? dueDate.format(formatter) : "-";
         String assigned = assignees.isEmpty() ? "-" : assignees.stream().map(m -> "%s (%s)".formatted(m.getName(), m.getRole())).collect(Collectors.joining(", "));
 
-        return "[%s] %s\n  Beschreibung: %s\n  Fällig: %s\n  Zugewiesen: %s".formatted(state, title, description != null ? description : "-", due, assigned);
+        return "[%s] %s\n  Beschreibung: %s\n  Status: %s\n  Priorität: %s\n  Fällig: %s\n  Zugewiesen: %s".formatted(state, title, description != null ? description : "-", state, priority, due, assigned);
     }
 }

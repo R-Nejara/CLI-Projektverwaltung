@@ -138,7 +138,7 @@ public abstract class BaseController implements Controller {
 //-------------------------------------------------------------------------
 
     @Override
-    public void addTask(String projectName, String name, String description, String state, LocalDateTime dueDate) {
+    public void addTask(String projectName, String name, String description, String state, String priority, LocalDateTime dueDate) {
         Project project = getProjectByName(projectName);
         if (project == null) { return; }
 
@@ -153,14 +153,14 @@ public abstract class BaseController implements Controller {
             return;
         }
 
-        Task newTask = new Task(name, description, state, dueDate);
+        Task newTask = new Task(name, description, state, priority, dueDate);
         project.addTasks(newTask);
         model.saveProject(project);
-        view.printMessage("Task added [Project: %s, Name: %s, Description: %s, DueDate: %s]".formatted(projectName, name, description, dueDate));
+        view.printMessage("Task added [Project: %s, Name: %s, Description: %s, State: %s, Priority: %s, DueDate: %s]".formatted(projectName, name, description, state, priority, dueDate));
     }
 
     @Override
-    public void editTask(String projectName, String taskName, String newName, String description, String state, LocalDateTime dueDate) {
+    public void editTask(String projectName, String taskName, String newName, String description, String state, String priority, LocalDateTime dueDate) {
         Boolean projectUpdated = false;
         Project project = getProjectByName(projectName);
         if (project == null) { return; }
@@ -191,6 +191,11 @@ public abstract class BaseController implements Controller {
 
         if (state != null && !state.isBlank() && !state.equals(task.getState().toString())) {
             task.setState(state);
+            projectUpdated = true;
+        }
+
+        if (priority != null && !priority.isBlank() && !priority.equals(task.getPriority().toString())) {
+            task.setPriority(priority);
             projectUpdated = true;
         }
 
