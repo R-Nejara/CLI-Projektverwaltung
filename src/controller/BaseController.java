@@ -17,7 +17,7 @@ public abstract class BaseController implements Controller {
     private final List<Project> projects;
 
     protected  BaseController() {
-        this.model = new DefaultModel(System.getProperty("user.home") + "/projects.txt");
+        this.model = new DefaultModel(System.getProperty("user.home") + "/.cli_projektverwaltung.txt");
         this.projects = this.model.loadProjects();
     }
 
