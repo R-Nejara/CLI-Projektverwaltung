@@ -31,7 +31,11 @@ public class DefaultView implements View {
     }
 
     @Override
-    public void printProjectList(List<Project> projects) {}
+    public void printProjectList(List<Project> projects) {
+        for (Project project : projects) {
+            System.out.println((project.getTitle()));
+        }
+    }
 
     @Override
     public void printProject(Project project) {}
