@@ -33,8 +33,11 @@ public abstract class BaseController implements Controller {
         } else if (!isNameUnique(name, getProjectNames())) {
             view.printError("A project with the name '%s' already exists.".formatted(name));
             return;
-        } else if (!startsWithValidSymbol(name)) {
-            view.printError("Project name must start with a letter.");
+        } else if (!nameIsValid(name)) {
+            view.printError("Project name must start with a letter and cannot contain the '|' character.");
+            return;
+        } else if (description != null && description.contains("|")) {
+            view.printError("Project description cannot contain the '|' character.");
             return;
         }
 
@@ -78,15 +81,18 @@ public abstract class BaseController implements Controller {
         if (newName != null && !isNameUnique(newName, getProjectNames())) {
             view.printError("A project with the name '%s' already exists.".formatted(newName));
             return;
-        } else if (newName != null && !startsWithValidSymbol(newName)) {
-            view.printError("Project name must start with a letter.");
+        } else if (newName != null && !nameIsValid(newName)) {
+            view.printError("Project name must start with a letter and cannot contain the '|' character.");
             return;
         } else if (newName != null && !newName.isBlank() && !newName.equals(project.getTitle())) {
             project.setName(newName);
             projectUpdated = true;
-        }
-
-        if (description != null && !description.equals(project.getDescription())) {
+        } 
+            
+        if (description != null && description.contains("|")) {
+            view.printError("Project description cannot contain the '|' character.");
+            return;
+        } else if (description != null && !description.equals(project.getDescription())) {
             project.setDescription(description);
             projectUpdated = true;
         }
@@ -148,8 +154,8 @@ public abstract class BaseController implements Controller {
         } else if (!isNameUnique(name, getTaskNames(project))) {
             view.printError("A task with the name '%s' already exists in project '%s'.".formatted(name, projectName));
             return;
-        } else if (!startsWithValidSymbol(name)) {
-            view.printError("Task name must start with a letter.");
+        } else if (!nameIsValid(name)) {
+            view.printError("Task name must start with a letter and cannot contain the '|' character.");
             return;
         }
 
@@ -174,8 +180,8 @@ public abstract class BaseController implements Controller {
         } else if (!isNameUnique(newName, getAssigneeNames(task))) {
             view.printError("A member with the name '%s' already exists in task '%s'.".formatted(newName, taskName));
             return;
-        } else if (!startsWithValidSymbol(newName)) {
-            view.printError("Member name must start with a letter.");
+        } else if (!nameIsValid(newName)) {
+            view.printError("Member name must start with a letter and cannot contain the '|' character.");
             return;
         }
 
@@ -253,8 +259,8 @@ public abstract class BaseController implements Controller {
         } else if (!isNameUnique(name, getAssigneeNames(task))) {
             view.printError("A member with the name '%s' already exists in task '%s'.".formatted(name, taskName));
             return;
-        } else if (!startsWithValidSymbol(name)) {
-            view.printError("Member name must start with a letter.");
+        } else if (!nameIsValid(name)) {
+            view.printError("Member name must start with a letter and cannot contain the '|' character.");
             return;
         }
 
@@ -345,10 +351,10 @@ public abstract class BaseController implements Controller {
         return names.stream().noneMatch(n -> n.equalsIgnoreCase(name));
     }
 
-    private Boolean startsWithValidSymbol(String input) {
+    private Boolean nameIsValid(String input) {
         if (input == null || input.isBlank()) { return false; }
 
-        return Character.isLetter(input.charAt(0));
+        return Character.isLetter(input.charAt(0)) && !input.contains("|");
     }
 
     private Project getProjectByName(String name) {
