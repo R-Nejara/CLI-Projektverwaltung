@@ -19,6 +19,13 @@ public abstract class BaseCommand implements Command {
     private final String SHORTCUT;
     private final int commandLevel;
 
+    /**
+     * Initializes a new instance of the BaseCommand class with the specified parameters.
+     * @param controller
+     * @param key
+     * @param shortcut
+     * @param commandLevel
+     */
     protected BaseCommand(Controller controller, String key, String shortcut, int commandLevel) {
         this.controller = controller;
         this.KEY = key.toLowerCase();
@@ -26,6 +33,10 @@ public abstract class BaseCommand implements Command {
         this.commandLevel = commandLevel;
     }
 
+    /**
+     * Executes the command with the specified arguments.
+     * @param args the arguments for the command
+     */
     @Override
     public void execute(String[] args) {
         if (subCommands.isEmpty()) { return; }
@@ -94,6 +105,14 @@ public abstract class BaseCommand implements Command {
 // Section: Protected functions
 //-------------------------------------------------------------------------
 
+    /**
+     * Retrieves the argument at the specified index from the given array of arguments.
+     * Validates that the argument is not null, not blank, and starts with a letter.
+     *
+     * @param args
+     * @param index
+     * @return
+     */
     protected String getArg(String[] args, Integer index) {
         if (args == null || index == null || index < 0 || index >= args.length) {
             return null;
@@ -107,10 +126,23 @@ public abstract class BaseCommand implements Command {
         return null;
     }
 
+    /**
+     * Retrieves the sub-arguments from the given array of arguments, starting from the second element.
+     *
+     * @param args the array of arguments
+     * @return the sub-arguments
+     */
     protected String[] getSubArgs(String[] args) {
         return getSubArgs(args, 1);
     }
 
+    /**
+     * Retrieves the sub-arguments from the given array of arguments, starting from the specified index.
+     *
+     * @param args the array of arguments
+     * @param preArgsCount the number of pre-arguments to skip
+     * @return the sub-arguments
+     */
     protected String[] getSubArgs(String[] args, int preArgsCount) {
         if (args.length < 1) { return new String[0]; }
         return Arrays.copyOfRange(
@@ -120,11 +152,23 @@ public abstract class BaseCommand implements Command {
         );
     }
 
+    /**
+     * Registers a sub-command to the current command, making it accessible via its key and shortcut.
+     *
+     * @param command the sub-command to register
+     */
     protected void registerSubCommand(Command command) {
         subCommands.put(command.getKey(), command);
         subCommands.put(command.getShortcut(), command);
     }
 
+    /**
+     * Retrieves a map of flags and their corresponding values from the given array of arguments.
+     * Flags are identified by their prefix (e.g., "--") and are followed by their value.
+     *
+     * @param args the array of arguments
+     * @return a map of flags and their corresponding values
+     */
     protected Map<String, String> getFlags(String[] args) {
         Map<String, String> flags = new LinkedHashMap<>();
 
@@ -145,6 +189,14 @@ public abstract class BaseCommand implements Command {
         return flags;
     }
 
+    /**
+     * Parses the given input string into a LocalDateTime object using a flexible date-time format.
+     * The expected format is "dd.MM.yyyy" with an optional time component "HH:mm".
+     * If the time component is not provided, it defaults to 23:59.
+     *
+     * @param input the input string to parse
+     * @return the parsed LocalDateTime object, or null if parsing fails
+     */
     protected LocalDateTime parseDateTime(String input) {
         if (input == null || input.isBlank()) { return null; }
 

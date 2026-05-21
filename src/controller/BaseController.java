@@ -25,6 +25,17 @@ public abstract class BaseController implements Controller {
 // Section: Project
 //-------------------------------------------------------------------------
 
+    /**
+     * Adds a new project to the system if all validation rules are met.
+     * The project is registered in the local collection and persistently saved via the model.
+     * 
+     * If the name and description validation fails, an error message is printed via the view, and the 
+     * project will not be created.
+     *
+     * @param name        the unique name of the new project
+     * @param description a brief description of the project (optional, may be null)
+     * @param dueDate     the deadline of the project (optional, may be null)
+     */
     @Override
     public void addProject(String name, String description, LocalDateTime dueDate) {
         if (name == null || name.isBlank()) {
@@ -47,6 +58,11 @@ public abstract class BaseController implements Controller {
         view.printMessage("Project added [Name: %s, Description: %s, DueDate: %s]".formatted(name, description, dueDate));
     }
 
+    /**
+     * Lists all projects in the system, optionally filtered by a search term.
+     *
+     * @param filter the search term to filter projects by (optional, may be null)
+     */
     @Override
     public void listProjects(String filter) {
         String searchText = (filter != null) ? filter.toLowerCase() : "";
@@ -63,6 +79,11 @@ public abstract class BaseController implements Controller {
         view.printProjectList(results);
     }
 
+    /**
+     * Displays the details of a specific project.
+     *
+     * @param name the name of the project to display
+     */
     @Override
     public void showProject(String name) {
         Project project = getProjectByName(name);
@@ -71,6 +92,18 @@ public abstract class BaseController implements Controller {
         view.printProject(project);
     }
 
+    /**
+     * Edits the details of an existing project if all validation rules are met.
+     * The project is updated in the local collection and persistently saved via the model.
+     * 
+     * If the name and description validation fails, an error message is printed via the view, and the 
+     * project will not be updated.
+     *
+     * @param name        the name of the project to edit
+     * @param newName     the new unique name for the project (optional, may be null)
+     * @param description a new brief description of the project (optional, may be null)
+     * @param dueDate     a new deadline for the project (optional, may be null)
+     */
     @Override
     public void editProject(String name, String newName, String description, LocalDateTime dueDate) {
         Project project = getProjectByName(name);
@@ -110,6 +143,11 @@ public abstract class BaseController implements Controller {
         }        
     }
 
+    /**
+     * Removes the specified projects from the system.
+     *
+     * @param projectNames a set of project names to remove
+     */
     @Override
     public void removeProjects(Set<String> projectNames) {
         Integer projectCount = this.projects.size();
@@ -143,6 +181,17 @@ public abstract class BaseController implements Controller {
 // Section: Task
 //-------------------------------------------------------------------------
 
+    /**
+     * Adds a new task to the specified project.
+     *
+     * if the project is not found or the task name validation fails, an error message is printed via the view, and the task will not be created.
+     * @param projectName the name of the project to add the task to
+     * @param name        the name of the task
+     * @param description a brief description of the task
+     * @param state       the current state of the task
+     * @param priority    the priority of the task
+     * @param dueDate     the deadline for the task
+     */
     @Override
     public void addTask(String projectName, String name, String description, String state, String priority, LocalDateTime dueDate) {
         Project project = getProjectByName(projectName);
@@ -165,6 +214,21 @@ public abstract class BaseController implements Controller {
         view.printMessage("Task added [Project: %s, Name: %s, Description: %s, State: %s, Priority: %s, DueDate: %s]".formatted(projectName, name, description, state, priority, dueDate));
     }
 
+    /**
+     * Edits the details of an existing task if all validation rules are met.
+     * The task is updated in the local collection and persistently saved via the model.
+     *
+     * If the name validation fails, an error message is printed via the view, and the
+     * task will not be updated.
+     *
+     * @param projectName the name of the project containing the task
+     * @param taskName    the name of the task to edit
+     * @param newName       the new unique name for the task (optional, may be null)
+     * @param description   a new brief description of the task (optional, may be null)
+     * @param state         the new state of the task (optional, may be null)
+     * @param priority      the new priority of the task (optional, may be null)
+     * @param dueDate       the new deadline for the task (optional, may be null)
+     */
     @Override
     public void editTask(String projectName, String taskName, String newName, String description, String state, String priority, LocalDateTime dueDate) {
         Boolean projectUpdated = false;
@@ -218,6 +282,12 @@ public abstract class BaseController implements Controller {
         }   
     }
 
+    /**
+     * Removes the specified tasks from the given project.
+     *
+     * @param projectName the name of the project containing the tasks
+     * @param taskNames   a set of task names to remove
+     */
     @Override
     public void removeTasks(String projectName, Set<String> taskNames) {
         Project project = getProjectByName(projectName);
@@ -245,6 +315,14 @@ public abstract class BaseController implements Controller {
 // Section: Assignee/Member
 //-------------------------------------------------------------------------
 
+    /**
+     * Adds a new assignee to the specified task.
+     *
+     * @param projectName the name of the project containing the task
+     * @param taskName    the name of the task to add the assignee to
+     * @param name          the name of the assignee
+     * @param role          the role of the assignee
+     */
     @Override
     public void addAssignee(String projectName, String taskName, String name, String role) {
         Project project = getProjectByName(projectName);
@@ -270,6 +348,19 @@ public abstract class BaseController implements Controller {
         view.printMessage("Assignee added [Project: %s, Task: %s, Name: %s, Role: %s]".formatted(projectName, taskName, name, role));
     }
 
+    /**
+     * Edits the details of an existing assignee if all validation rules are met.
+     * The assignee is updated in the local collection and persistently saved via the model.
+     *
+     * If the name validation fails, an error message is printed via the view, and the
+     * assignee will not be updated.
+     *
+     * @param projectName the name of the project containing the task
+     * @param taskName    the name of the task containing the assignee
+     * @param memberName  the name of the assignee to edit
+     * @param name          the new unique name for the assignee (optional, may be null)
+     * @param role          the new role for the assignee (optional, may be null)
+     */
     @Override
     public void editAssignee(String projectName, String taskName, String memberName, String name, String role) {
         Boolean projectUpdated = false;
@@ -297,6 +388,13 @@ public abstract class BaseController implements Controller {
         }   
     }
 
+    /**
+     * Removes the specified assignees from the given task.
+     *
+     * @param projectName the name of the project containing the task
+     * @param taskName    the name of the task containing the assignees
+     * @param assigneeNames a set of assignee names to remove
+     */
     @Override
     public void removeAssignees(String projectName, String taskName, Set<String> assigneeNames) {
         Project project = getProjectByName(projectName);
