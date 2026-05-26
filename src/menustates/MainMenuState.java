@@ -22,7 +22,7 @@ public class MainMenuState implements MenuState {
         switch (userSelection) {
             case 1 -> { return new ProjectMenuState(controller, view, this); }
             case 2 -> { return new TaskMenuState(controller, view, this); }
-            case 3 -> { return null; }
+            case 3 -> { return new MemberMenuState(controller, view, this); }
             case 4 -> { return null; }
             default -> {
                 view.printError("Invalid option. Please select a valid option from the menu.");
