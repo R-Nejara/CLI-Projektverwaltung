@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import src.commands.BaseCommand;
 import src.controller.Controller;
+import src.utils.DateTimeUtil;
 
 public class AddProjectCommand extends BaseCommand {
     public AddProjectCommand(Controller controller) {
@@ -24,7 +25,7 @@ public class AddProjectCommand extends BaseCommand {
             switch (key) {
                 case "n" -> name = value;
                 case "d" -> description = value;
-                case "t" -> dueDate = super.parseDateTime(value); 
+                case "t" -> dueDate = DateTimeUtil.parseDateTime(value); 
                 default -> {}
             }
         }

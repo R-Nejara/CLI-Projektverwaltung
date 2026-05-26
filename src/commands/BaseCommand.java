@@ -1,9 +1,5 @@
 package src.commands;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -187,34 +183,6 @@ public abstract class BaseCommand implements Command {
             }
         }
         return flags;
-    }
-
-    /**
-     * Parses the given input string into a LocalDateTime object using a flexible date-time format.
-     * The expected format is "dd.MM.yyyy" with an optional time component "HH:mm".
-     * If the time component is not provided, it defaults to 23:59.
-     *
-     * @param input the input string to parse
-     * @return the parsed LocalDateTime object, or null if parsing fails
-     */
-    protected LocalDateTime parseDateTime(String input) {
-        if (input == null || input.isBlank()) { return null; }
-
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-            .appendPattern("dd.MM.yyyy")
-            .optionalStart()
-            .appendPattern(" HH:mm")
-            .optionalEnd()
-            .parseDefaulting(ChronoField.HOUR_OF_DAY, 23)
-            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 59)
-            .toFormatter();
-
-        try {
-            return LocalDateTime.parse(input, formatter);
-        } catch (Exception e) {
-            System.out.println(e.getLocalizedMessage());
-            return null;
-        }
     }
 
 //-------------------------------------------------------------------------

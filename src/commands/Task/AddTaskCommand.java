@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import src.commands.BaseCommand;
 import src.controller.Controller;
+import src.utils.DateTimeUtil;
 
 public class AddTaskCommand extends BaseCommand {
     public AddTaskCommand(Controller controller) {
@@ -27,7 +28,7 @@ public class AddTaskCommand extends BaseCommand {
                 case "d" -> description = value;
                 case "s" -> state = value;
                 case "p" -> priority = value;
-                case "t" -> dueDate = super.parseDateTime(value);
+                case "t" -> dueDate = DateTimeUtil.parseDateTime(value);
                 default -> {}
             }
         }
