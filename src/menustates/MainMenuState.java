@@ -20,7 +20,7 @@ public class MainMenuState implements MenuState {
         userSelection = view.readUserInput(options, "Invalid option. Please select a valid option from the menu.", true);
 
         switch (userSelection) {
-            case 1 -> { return null; }
+            case 1 -> { return new ProjectMenuState(controller, view, this); }
             case 2 -> { return null; }
             case 3 -> { return null; }
             case 4 -> { return null; }
