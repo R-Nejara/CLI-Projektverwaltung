@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public final class DateTimeUtil {
     private DateTimeUtil() {}
 
-    public final static Pattern FORMAT_REGEX = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4}( \\d{2}:\\d{2})?");
+    public final static Pattern FORMAT_REGEX = Pattern.compile("^$|\\d{2}\\.\\d{2}\\.\\d{4}( \\d{2}:\\d{2})?");
     public final static String FORMAT = "dd.MM.yyyy [HH:mm]";
 
 
