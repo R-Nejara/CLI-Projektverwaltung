@@ -88,5 +88,10 @@ public class BackupView implements View {
         System.out.println("Project: " + project.getTitle());
         System.out.println("Description: " + project.getDescription());
         System.out.println("Deadline: " + project.getDueDate());
+
+        System.out.println("Tasks:");
+        project.getTasks().forEach(task -> {
+            System.out.println("  - " + task.getTitle() + " (Due: " + task.getDueDate() + ", State: " + task.getState() + ")");
+        }); 
     }
 }
