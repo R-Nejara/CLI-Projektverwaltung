@@ -15,4 +15,10 @@ public final class ConsoleFormatter {
     public static String formatWarning(String warningMsg) {
         return BOLD + YELLOW + "Error: " + RESET + warningMsg;
     }
+
+    public static void clear() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.printf("========================== Projektverwaltung CLI ==========================\n\n");
+    }
 }
