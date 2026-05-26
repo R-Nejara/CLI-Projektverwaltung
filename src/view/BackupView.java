@@ -20,7 +20,7 @@ public class BackupView implements View {
             System.out.printf("\n%s\n> ", message);
             userInput = scanner.nextLine();
 
-            if (userInput.matches(pattern.pattern())) {
+            if (pattern == null || userInput.matches(pattern.pattern())) {
                 return userInput;
             } else {
                 ConsoleFormatter.clear();
