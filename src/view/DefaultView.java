@@ -6,12 +6,12 @@ import src.model.Project;
 
 public class DefaultView implements View {
     @Override
-    public String readUserInput(String message, Pattern pattern, String errorMessage) {
+    public String readUserInput(String message, Pattern pattern, String errorMessage, Boolean printHeader) {
         return null;
     }
 
     @Override
-    public Integer readUserInput(String[] options, String errorMessage) {
+    public Integer readUserInput(String[] options, String errorMessage, Boolean printHeader) {
         return null;
     }
 
