@@ -2,10 +2,15 @@ package src.controller;
 
 import src.commands.Command;
 import src.commands.RootCommand;
+import src.view.View;
 
 public class ArgsController extends BaseController {  
     private final static String HELP_KEY = "help"; 
     private final static String HELP_SHORTCUT = "-h"; 
+
+    public ArgsController(View view) {
+        super(view);
+    }
 
     @Override
     public void run(String[] args) {

@@ -8,15 +8,15 @@ import src.model.Member;
 import src.model.Model;
 import src.model.Project;
 import src.model.Task;
-import src.view.DefaultView;
 import src.view.View;
 
 public abstract class BaseController implements Controller {
-    protected final View view = new DefaultView();
+    protected final View view;
     protected final Model model;
     private final List<Project> projects;
 
-    protected  BaseController() {
+    protected  BaseController(View view) {
+        this.view = view;
         this.model = new DefaultModel(System.getProperty("user.home") + "/.cli_projektverwaltung.txt");
         this.projects = this.model.loadProjects();
     }
