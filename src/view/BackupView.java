@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import src.model.Project;
+import src.model.Task;
 
 public class BackupView implements View {
     private final Scanner scanner = new Scanner(System.in);
@@ -80,6 +81,14 @@ public class BackupView implements View {
         System.out.printf("\nProjects:\n");
         for (Project project : projects) {
             System.out.printf("  - %s\n", project.getTitle());
+        }
+    }
+
+    @Override
+    public void printTaskList(List<Task> tasks) {
+        System.out.printf("\nTasks:\n");
+        for (Task task : tasks) {
+            System.out.printf("  - %s\n", task.getTitle());
         }
     }
 

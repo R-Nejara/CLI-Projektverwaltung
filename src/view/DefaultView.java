@@ -3,6 +3,7 @@ package src.view;
 import java.util.List;
 import java.util.regex.Pattern;
 import src.model.Project;
+import src.model.Task;
 
 public class DefaultView implements View {
     @Override
@@ -34,6 +35,13 @@ public class DefaultView implements View {
     public void printProjectList(List<Project> projects) {
         for (Project project : projects) {
             System.out.println((project.getTitle()));
+        }
+    }
+
+    @Override
+    public void printTaskList(List<Task> tasks) {
+        for (Task task : tasks) {
+            System.out.printf("  - %s\n", task.getTitle());
         }
     }
 
