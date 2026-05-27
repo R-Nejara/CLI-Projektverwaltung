@@ -215,6 +215,30 @@ public abstract class BaseController implements Controller {
     }
 
     /**
+     * Lists all tasks in the specified project, optionally filtered by a search term.
+     *
+     * @param projectName the name of the project containing the tasks
+     * @param filter the search term to filter tasks by (optional, may be null)
+     */
+    @Override
+    public void listTasks(String projectName,String filter) {
+        String searchText = (filter != null) ? filter.toLowerCase() : "";
+        Project project = getProjectByName(projectName);
+        if (project == null) { return; }
+
+        List<Task> results = project.getTasks().stream()
+                                        .filter(t -> t.getTitle().toLowerCase().contains(searchText))
+                                        .toList();
+
+        if (results == null || results.isEmpty()) {
+            view.printWarning("No tasks found.");
+            return;
+        }
+
+        view.printTaskList(results);
+    }
+
+    /**
      * Edits the details of an existing task if all validation rules are met.
      * The task is updated in the local collection and persistently saved via the model.
      *
