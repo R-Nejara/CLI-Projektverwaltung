@@ -1,19 +1,67 @@
 package src.view;
 
+import java.util.Scanner;
 import java.util.List;
 import java.util.regex.Pattern;
 import src.model.Project;
 import src.model.Task;
+import src.view.ConsoleFormatter;
 
 public class DefaultView implements View {
+    Scanner scanner = new Scanner(System.in);
+    /**
+     * User Input wird gelesen und zurückgegeben bis das pattern ihn annimmt
+     * 
+     * @param message Nachricht die an User gesendet wird
+     * @param pattern Regulärer Ausdruck für Eingabeformat
+     * @param errorMessage Fehlernachricht für RegEx
+     * @param printHeader Schalter für das darstellen der Überschrift
+     */
     @Override
     public String readUserInput(String message, Pattern pattern, String errorMessage, Boolean printHeader) {
-        return null;
+        String userInput;
+        if (printHeader) {
+            ConsoleFormatter.clear();
+        }
+
+        while (true){
+            System.out.printf("%s\n> ", message);
+            userInput = scanner.nextLine();
+            if (pattern == null || userInput.matches(pattern.pattern())) {
+                return userInput;
+            } else {
+                System.out.printf("%s\n", errorMessage);
+            }
+        }
     }
 
     @Override
     public Integer readUserInput(String[] options, String errorMessage, Boolean printHeader) {
-        return null;
+        String userInput;
+        int parsedUserInput;
+        ConsoleFormatter.clear();
+
+        while (true) {
+            System.out.printf("Wähle eine Option:\n");
+
+            for (int i = 0; i < options.length; i++) {
+               System.out.printf("%d. %s\n", i+1, options[i]);
+            }
+            System.out.printf("> ");
+            userInput = scanner.nextLine();
+
+            try {
+            parsedUserInput = Integer.parseInt(userInput);
+
+            if (parsedUserInput > 0 && parsedUserInput <= options.length) {
+                return parsedUserInput;
+            }
+            throw new IndexOutOfBoundsException();
+
+            } catch (NumberFormatException e) {
+                System.out.println(errorMessage == null ?  e.getMessage() : errorMessage);
+            }
+        }
     }
 
     @Override
