@@ -24,10 +24,9 @@ public class MemberMenuState implements MenuState {
     
     @Override
     public MenuState handle() {
-        Integer userSelection;
         String[] options = {"Add Member", "Edit Member", "Delete Member", "Back to Main Menu"}; 
 
-        userSelection = view.readUserInput(
+        Integer userSelection = view.readUserInput(
             options, 
             "Invalid option. Please select a valid option from the menu.", 
             !skipHeader

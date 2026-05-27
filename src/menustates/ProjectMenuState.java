@@ -25,10 +25,9 @@ public class ProjectMenuState implements MenuState {
     
     @Override
     public MenuState handle() {
-        Integer userSelection;
         String[] options = {"Add Project", "List Projects", "Show Project", "Edit Project", "Delete Project", "Back to Main Menu"}; 
 
-        userSelection = view.readUserInput(
+        Integer userSelection = view.readUserInput(
             options, 
             "Invalid option. Please select a valid option from the menu.", 
             !skipHeader

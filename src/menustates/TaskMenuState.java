@@ -28,10 +28,9 @@ public class TaskMenuState implements MenuState {
     
     @Override
     public MenuState handle() {
-        Integer userSelection;
         String[] options = {"Add Task", "List Tasks", "Edit Task", "Delete Task", "Back to Main Menu"}; 
 
-        userSelection = view.readUserInput(
+        Integer userSelection = view.readUserInput(
             options, 
             "Invalid option. Please select a valid option from the menu.", 
             !skipHeader

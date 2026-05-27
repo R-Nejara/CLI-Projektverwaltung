@@ -14,10 +14,9 @@ public class MainMenuState implements MenuState {
     
     @Override
     public MenuState handle() {
-        Integer userSelection;
         String[] options = {"Projects", "Tasks", "Members", "Exit"}; 
 
-        userSelection = view.readUserInput(options, "Invalid option. Please select a valid option from the menu.", true);
+        Integer userSelection = view.readUserInput(options, "Invalid option. Please select a valid option from the menu.", true);
 
         switch (userSelection) {
             case 1 -> { return new ProjectMenuState(controller, view, this); }
