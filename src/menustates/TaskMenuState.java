@@ -113,15 +113,17 @@ public class TaskMenuState implements MenuState {
             true
         );
 
+        controller.listTasks(projectName, null);
+
         String taskName = askForTaskName ?view.readUserInput(
             "Enter task name:", 
             Pattern.compile(".+"),
             "Task name cannot be empty.",
-            true
+            false
         ) : null;
 
         String newTaskName = askForNewName ? view.readUserInput(
-            "Enter new task name:", 
+            "Enter new task name (leave empty to keep current):", 
             Pattern.compile(".+"),
             "Task name cannot be empty.",
             true
