@@ -11,7 +11,7 @@ public interface Controller {
 //-------------------------------------------------------------------------
 
     public void addProject(String name, String description, LocalDateTime dueDate);
-    public void listProjects(String filter);
+    public boolean listProjects(String filter);
     public void showProject(String name);
     public void editProject(String name, String newName, String desciption, LocalDateTime dueDate);
     public void removeProjects(Set<String> projectNames);
