@@ -13,7 +13,7 @@ public final class ConsoleFormatter {
     }
 
     public static String formatWarning(String warningMsg) {
-        return BOLD + YELLOW + "Error: " + RESET + warningMsg;
+        return BOLD + YELLOW + "Warning: " + RESET + warningMsg;
     }
 
     public static void clear() {
