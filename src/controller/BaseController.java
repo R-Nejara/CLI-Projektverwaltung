@@ -64,7 +64,7 @@ public abstract class BaseController implements Controller {
      * @param filter the search term to filter projects by (optional, may be null)
      */
     @Override
-    public void listProjects(String filter) {
+    public boolean listProjects(String filter) {
         String searchText = (filter != null) ? filter.toLowerCase() : "";
 
         List<Project> results = this.projects.stream()
@@ -73,10 +73,11 @@ public abstract class BaseController implements Controller {
 
         if (results == null || results.isEmpty()) {
             view.printWarning("No projects found.");
-            return;
+            return false;
         }
 
         view.printProjectList(results);
+        return true;
     }
 
     /**

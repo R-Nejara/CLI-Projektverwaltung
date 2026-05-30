@@ -53,14 +53,14 @@ public class ProjectMenuState implements MenuState {
 
     private MenuState addProject() {
         String[] attributes = readAttributes(false, true, true);
-
+        
         controller.addProject(attributes[0], attributes[2], DateTimeUtil.parseDateTime(attributes[3]));
         this.skipHeader = true;
         return this;
     }
 
     private MenuState editProject() {
-        controller.listProjects(null);
+        if (controller.listProjects(null)) { return this; }
         String[] attributes = readAttributes(true, true, true);
 
         controller.editProject(attributes[0], attributes[1], attributes[2], DateTimeUtil.parseDateTime(attributes[3]));
@@ -82,16 +82,16 @@ public class ProjectMenuState implements MenuState {
     }
 
     private MenuState showProject() {
-        controller.listProjects(null);
+        this.skipHeader = true;
+        if (!controller.listProjects(null)) { return this; }
         String[] attributes = readAttributes(false, false, false);
 
         controller.showProject(attributes[0]);
-        this.skipHeader = true;
         return this;
     }
 
     private MenuState deleteProject() {
-        controller.listProjects(null);
+        if (!controller.listProjects(null)) { return this; }
         String[] attributes = readAttributes(false, false, false);
 
         controller.removeProjects(Set.of(attributes[0]));
@@ -108,28 +108,28 @@ public class ProjectMenuState implements MenuState {
             "Enter project name:", 
             Pattern.compile(".+"),
             "Project name cannot be empty.",
-            true
+            !skipHeader
         );
 
         String newProjectName = askForNewName ? view.readUserInput(
             "Enter new project name:", 
             Pattern.compile(".+"),
             "Project name cannot be empty.",
-            true
+            !skipHeader
         ) : null;
 
         String description = askForDescription ? view.readUserInput(
             "Enter new project description:", 
             null, 
             null, 
-            true
+            !skipHeader
         ) : null;
 
         String dueDateStr = askForDueDate ? view.readUserInput(
             "Enter project dueDate (" + DateTimeUtil.FORMAT + "):", 
             DateTimeUtil.FORMAT_REGEX, 
             "Invalid date format. Please enter the date in " + DateTimeUtil.FORMAT + " format.", 
-            true
+            !skipHeader
         ) : null;
 
         return new String[]{projectName, newProjectName, description, dueDateStr};
