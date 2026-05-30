@@ -1,6 +1,9 @@
 package src.menustates;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import src.controller.Controller;
 import src.utils.DateTimeUtil;
@@ -9,14 +12,25 @@ import src.view.View;
 public class ProjectMenuState implements MenuState {
     private final Controller controller;
     private final View view;
-    private final MenuState previousState;
+    private final Map<String, Supplier<MenuState>> menuActions = new LinkedHashMap<>();
 
-    private Boolean skipHeader = false;
+    private record ProjectAttributes(
+        String projectName, 
+        String newProjectName, 
+        String description, 
+        String dueDate
+    ) {}
 
     public ProjectMenuState(Controller controller, View view, MenuState previousState) {
         this.controller = controller;
         this.view = view;
-        this.previousState = previousState;
+
+        menuActions.put("Add Project", () -> addProject());
+        menuActions.put("List Projects", () -> listProjects());
+        menuActions.put("Show Project", () -> showProject());
+        menuActions.put("Edit Project", () -> editProject());
+        menuActions.put("Delete Project", () -> deleteProject());
+        menuActions.put("Back to Main Menu", () -> previousState);
     }
 
 //-------------------------------------------------------------------------
@@ -25,26 +39,15 @@ public class ProjectMenuState implements MenuState {
     
     @Override
     public MenuState handle() {
-        String[] options = {"Add Project", "List Projects", "Show Project", "Edit Project", "Delete Project", "Back to Main Menu"}; 
+        final String[] options = menuActions.keySet().toArray(String[]::new);
+        final String errorMsg = "Invalid option. Please select a valid option from the menu.";
+        final Integer selection = view.readUserInput(options, errorMsg, true);
 
-        Integer userSelection = view.readUserInput(
-            options, 
-            "Invalid option. Please select a valid option from the menu.", 
-            !skipHeader
-        );
+        if (selection == null || selection < 1 || selection > options.length) { return this; }
 
-        switch (userSelection) {
-            case 1 -> { return addProject(); }
-            case 2 -> { return listProjects(); }
-            case 3 -> { return showProject(); }
-            case 4 -> { return editProject(); }
-            case 5 -> { return deleteProject(); }
-            case 6 -> { return previousState; }
-            default -> {
-                view.printError("Invalid option. Please select a valid option from the menu.");
-                return this;
-            }
-        }
+        final String selectedKey = options[selection - 1];
+
+        return menuActions.get(selectedKey).get();
     }
 
 //-------------------------------------------------------------------------
@@ -52,50 +55,38 @@ public class ProjectMenuState implements MenuState {
 //-------------------------------------------------------------------------
 
     private MenuState addProject() {
-        String[] attributes = readAttributes(false, true, true);
-        
-        controller.addProject(attributes[0], attributes[2], DateTimeUtil.parseDateTime(attributes[3]));
-        this.skipHeader = true;
+        ProjectAttributes attributes = readAttributes(false, true, true, true);
+
+        controller.addProject(attributes.projectName(), attributes.description(), DateTimeUtil.parseDateTime(attributes.dueDate()));
         return this;
     }
 
     private MenuState editProject() {
-        if (controller.listProjects(null)) { return this; }
-        String[] attributes = readAttributes(true, true, true);
+        ProjectAttributes attributes = readAttributes(true, true, true, true);
 
-        controller.editProject(attributes[0], attributes[1], attributes[2], DateTimeUtil.parseDateTime(attributes[3]));
-        this.skipHeader = true;
+        controller.editProject(attributes.projectName(), attributes.newProjectName(), attributes.description(), DateTimeUtil.parseDateTime(attributes.dueDate()));
         return this;
     }
 
     private MenuState listProjects() {
-        String filter = view.readUserInput(
-            "Enter a filter or press enter:", 
-            null, 
-            null, 
-            true
-        );
+        String filter = view.readUserInput("Enter a filter or press enter:", null, null, true);
         
         controller.listProjects(filter);
-        this.skipHeader = true;
+        view.readUserInput("Press enter to continue...", null, null, false);
         return this;
     }
 
     private MenuState showProject() {
-        this.skipHeader = true;
-        if (!controller.listProjects(null)) { return this; }
-        String[] attributes = readAttributes(false, false, false);
+        ProjectAttributes attributes = readAttributes(false, false, false, true);
 
-        controller.showProject(attributes[0]);
+        controller.showProject(attributes.projectName());
         return this;
     }
 
     private MenuState deleteProject() {
-        if (!controller.listProjects(null)) { return this; }
-        String[] attributes = readAttributes(false, false, false);
+        ProjectAttributes attributes = readAttributes(false, false, false, true);
 
-        controller.removeProjects(Set.of(attributes[0]));
-        this.skipHeader = true;
+        controller.removeProjects(Set.of(attributes.projectName()));
         return this;
     }
 
@@ -103,35 +94,37 @@ public class ProjectMenuState implements MenuState {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-    private String[] readAttributes(Boolean askForNewName, Boolean askForDescription, Boolean askForDueDate) {
-        String projectName = view.readUserInput(
-            "Enter project name:", 
-            Pattern.compile(".+"),
-            "Project name cannot be empty.",
-            !skipHeader
-        );
+private ProjectAttributes readAttributes(boolean askForNewName, boolean askForDescription, boolean askForDueDate, boolean skipHeader) {
+    final Pattern namePattern = Pattern.compile("^([a-zA-Z][^|]*|)$");
+    final String nameError = "Project name must start with a letter and cannot contain a pipe character.";
+    final boolean shouldClear = !skipHeader;
 
-        String newProjectName = askForNewName ? view.readUserInput(
-            "Enter new project name:", 
-            Pattern.compile(".+"),
-            "Project name cannot be empty.",
-            !skipHeader
-        ) : null;
+    controller.listProjects(null);
 
-        String description = askForDescription ? view.readUserInput(
-            "Enter new project description:", 
-            null, 
-            null, 
-            !skipHeader
-        ) : null;
+    final String projectName = view.readUserInput("Enter project name:", namePattern, nameError, shouldClear);
 
-        String dueDateStr = askForDueDate ? view.readUserInput(
-            "Enter project dueDate (" + DateTimeUtil.FORMAT + "):", 
+    final String newProjectName = askForNewName 
+        ? view.readUserInput("Enter new project name:", namePattern, nameError, shouldClear) 
+        : null;
+
+    final String description = askForDescription 
+        ? view.readUserInput("Enter new project description:", null, null, shouldClear) 
+        : null;
+
+    final String dueDateStr = askForDueDate 
+        ? view.readUserInput(
+            "Enter project dueDate (%s):".formatted(DateTimeUtil.FORMAT), 
             DateTimeUtil.FORMAT_REGEX, 
-            "Invalid date format. Please enter the date in " + DateTimeUtil.FORMAT + " format.", 
-            !skipHeader
-        ) : null;
+            "Invalid date format. Please enter the date in %s format.".formatted(DateTimeUtil.FORMAT), 
+            shouldClear
+          ) 
+        : null;
 
-        return new String[]{projectName, newProjectName, description, dueDateStr};
-    }
+    return new ProjectAttributes(
+        projectName,
+        (newProjectName != null && !newProjectName.isBlank()) ? newProjectName : null,
+        (description != null && !description.isBlank()) ? description : null,
+        (dueDateStr != null && !dueDateStr.isBlank()) ? dueDateStr : null
+    );
+}
 }

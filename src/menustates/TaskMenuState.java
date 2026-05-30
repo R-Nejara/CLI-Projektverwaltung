@@ -2,9 +2,13 @@ package src.menustates;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import src.controller.Controller;
+import src.model.Priority;
 import src.model.State;
 import src.utils.DateTimeUtil;
 import src.view.View;
@@ -12,14 +16,27 @@ import src.view.View;
 public class TaskMenuState implements MenuState {
     private final Controller controller;
     private final View view;
-    private final MenuState previousState;
+    private final Map<String, Supplier<MenuState>> menuActions = new LinkedHashMap<>();
 
-    private Boolean skipHeader = false;
+    private record TaskAttributes(
+        String projectName, 
+        String taskName,
+        String newTaskName,
+        String description, 
+        String state,
+        String priority, 
+        String dueDate
+    ) {}
 
     public TaskMenuState(Controller controller, View view, MenuState previousState) {
         this.controller = controller;
         this.view = view;
-        this.previousState = previousState;
+
+        menuActions.put("Add Task", () -> addTask());
+        menuActions.put("List Tasks", () -> listTasks());
+        menuActions.put("Edit Task", () -> editTask());
+        menuActions.put("Delete Task", () -> deleteTask());
+        menuActions.put("Back to Main Menu", () -> previousState);
     }
 
 //-------------------------------------------------------------------------
@@ -28,25 +45,15 @@ public class TaskMenuState implements MenuState {
     
     @Override
     public MenuState handle() {
-        String[] options = {"Add Task", "List Tasks", "Edit Task", "Delete Task", "Back to Main Menu"}; 
+        final String[] options = menuActions.keySet().toArray(String[]::new);
+        final String errorMsg = "Invalid option. Please select a valid option from the menu.";
+        final Integer selection = view.readUserInput(options, errorMsg, true);
 
-        Integer userSelection = view.readUserInput(
-            options, 
-            "Invalid option. Please select a valid option from the menu.", 
-            !skipHeader
-        );
+        if (selection == null || selection < 1 || selection > options.length) { return this; }
 
-        switch (userSelection) {
-            case 1 -> { return addTask(); }
-            case 2 -> { return listTasks(); }
-            case 3 -> { return editTask(); }
-            case 4 -> { return deleteTask(); }
-            case 5 -> { return previousState; }
-            default -> {
-                view.printError("Invalid option. Please select a valid option from the menu.");
-                return this;
-            }
-        }
+        final String selectedKey = options[selection - 1];
+
+        return menuActions.get(selectedKey).get();
     }
 
 //-------------------------------------------------------------------------
@@ -54,50 +61,42 @@ public class TaskMenuState implements MenuState {
 //-------------------------------------------------------------------------
 
     private MenuState addTask() {
-        String[] attributes = readAttributes(true, false, true, true, true, true);
+        TaskAttributes attributes = readAttributes(true, false, true, true, true, true, true);
 
-        LocalDateTime dueDate = DateTimeUtil.parseDateTime(attributes[6]);
-        controller.addTask(attributes[0], attributes[1], attributes[3], attributes[4], attributes[5], dueDate);
+        LocalDateTime dueDate = DateTimeUtil.parseDateTime(attributes.dueDate());
+        controller.addTask(attributes.projectName(), attributes.taskName(), attributes.description(), attributes.state(), attributes.priority(), dueDate);
         return this;
     }
 
     private MenuState listTasks() {
-        String[] attributes = readAttributes(false, false, false, false, false, false);
+        TaskAttributes attributes = readAttributes(false, false, false, false, false, false, true);
 
-        String filterString = view.readUserInput(
-            "Enter filter string (leave empty for no filter):", 
-            null, 
-            null, 
-            true
-        );
+        String filterString = view.readUserInput("Enter filter string (leave empty for no filter):", null, null, true);
 
-        controller.listTasks(attributes[0], filterString);
-        this.skipHeader = true;
+        controller.listTasks(attributes.projectName(), filterString);
         return this;
     }
 
     private MenuState editTask() {
-        String[] attributes = readAttributes(true, true, true, true, true, true);
+        TaskAttributes attributes = readAttributes(true, true, true, true, true, true, true);
 
         controller.editTask(
-            attributes[0], // projectName
-            attributes[1], // taskName
-            attributes[2], // newName
-            attributes[3], // newDescription
-            attributes[4], // newState
-            attributes[5], // newPriority
-            DateTimeUtil.parseDateTime(attributes[6]) // newDueDate
+            attributes.projectName(),
+            attributes.taskName(),
+            attributes.newTaskName(),
+            attributes.description(),
+            attributes.state(),
+            attributes.priority(),
+            DateTimeUtil.parseDateTime(attributes.dueDate())
         );
 
-        this.skipHeader = true;
         return this;
     }
 
     private MenuState deleteTask() {
-        String[] attributes = readAttributes(true, false, false, false, false, false);
+        TaskAttributes attributes = readAttributes(true, false, false, false, false, false, true);
 
-        controller.removeTasks(attributes[0], Set.of(attributes[1]));
-        this.skipHeader = true;
+        controller.removeTasks(attributes.projectName(), Set.of(attributes.taskName()));
         return this;
     }
 
@@ -105,58 +104,42 @@ public class TaskMenuState implements MenuState {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-    private String[] readAttributes(Boolean askForTaskName, Boolean askForNewName,Boolean askForDescription, Boolean askForState, Boolean askForPriority, Boolean askForDueDate) {
+    private TaskAttributes readAttributes(Boolean askForTaskName, Boolean askForNewName,Boolean askForDescription, Boolean askForState, Boolean askForPriority, Boolean askForDueDate, Boolean skipHeader) {
+        final boolean shouldClear = !skipHeader;
+
+        controller.listProjects(null);
         String projectName = view.readUserInput(
-            "Enter project name:", 
-            Pattern.compile(".+"),
-            "Project name cannot be empty.",
-            true
+            "Enter project name:",  Pattern.compile(".+"), "Project name cannot be empty.", shouldClear
         );
 
-        controller.listTasks(projectName, null);
+        if (askForTaskName) {
+            controller.listTasks(projectName, null);
+        }
 
         String taskName = askForTaskName ?view.readUserInput(
-            "Enter task name:", 
-            Pattern.compile(".+"),
-            "Task name cannot be empty.",
-            false
+            "Enter task name:", Pattern.compile(".+"),"Task name cannot be empty.", shouldClear
         ) : null;
 
         String newTaskName = askForNewName ? view.readUserInput(
-            "Enter new task name (leave empty to keep current):", 
-            Pattern.compile(".+"),
-            "Task name cannot be empty.",
-            true
+            "Enter new task name (leave empty to keep current):", Pattern.compile("^([a-zA-Z][^|]*|)$"), "Task name must start with a letter and cannot contain a pipe character.", shouldClear
         ) : null;
 
         String description = askForDescription ? view.readUserInput(
-            "Enter new task description:", 
-            null, 
-            null, 
-            true
+            "Enter new task description:", null, null, shouldClear
         ) : null;
 
         String state = askForState ? view.readUserInput(
-            "Enter new task state (" + Arrays.toString(State.values()) +"):", 
-            null, 
-            null, 
-            true
+            "Enter new task state (" + Arrays.toString(State.values()) +"):", null, null, shouldClear
         ) : null;
 
         String priority = askForPriority ? view.readUserInput(
-            "Enter new task priority:", 
-            null, 
-            null, 
-            true
+            "Enter new task priority (" + Arrays.toString(Priority.values()) +"):", null, null, shouldClear
         ) : null;
 
         String dueDateStr = askForDueDate ? view.readUserInput(
-            "Enter task dueDate (" + DateTimeUtil.FORMAT + "):", 
-            DateTimeUtil.FORMAT_REGEX, 
-            "Invalid date format. Please enter the date in " + DateTimeUtil.FORMAT + " format.", 
-            true
+            "Enter task dueDate (" + DateTimeUtil.FORMAT + "):", DateTimeUtil.FORMAT_REGEX, "Invalid date format. Please enter the date in " + DateTimeUtil.FORMAT + " format.", shouldClear
         ) : null;
 
-        return new String[]{projectName, taskName, newTaskName, description, state, priority, dueDateStr};
+        return new TaskAttributes(projectName, taskName, newTaskName, description, state, priority, dueDateStr);
     }
 }
