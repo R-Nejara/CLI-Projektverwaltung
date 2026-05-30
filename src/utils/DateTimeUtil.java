@@ -7,16 +7,10 @@ import java.time.temporal.ChronoField;
 import java.util.regex.Pattern;
 
 public final class DateTimeUtil {
-    private DateTimeUtil() {}
+    public static final Pattern FORMAT_REGEX = Pattern.compile("^($|\\d{2}\\.\\d{2}\\.\\d{4}( \\d{2}:\\d{2})?)$");
+    public static final String FORMAT = "dd.MM.yyyy [HH:mm]";
 
-    public final static Pattern FORMAT_REGEX = Pattern.compile("^$|\\d{2}\\.\\d{2}\\.\\d{4}( \\d{2}:\\d{2})?");
-    public final static String FORMAT = "dd.MM.yyyy [HH:mm]";
-
-
-    public static LocalDateTime parseDateTime(String input) {
-        if (input == null || input.isBlank()) { return null; }
-
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
             .appendPattern("dd.MM.yyyy")
             .optionalStart()
             .appendPattern(" HH:mm")
@@ -25,10 +19,17 @@ public final class DateTimeUtil {
             .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 59)
             .toFormatter();
 
+    private DateTimeUtil() {}
+
+    public static LocalDateTime parseDateTime(String input) {
+        if (input == null || input.isBlank()) { 
+            return null; 
+        }
+
         try {
-            return LocalDateTime.parse(input, formatter);
+            return LocalDateTime.parse(input, FORMATTER);
         } catch (Exception e) {
-            System.out.println(e.getLocalizedMessage());
+            System.err.println("Error parsing date: " + e.getLocalizedMessage());
             return null;
         }
     }
