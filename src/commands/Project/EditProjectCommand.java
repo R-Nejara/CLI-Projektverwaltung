@@ -34,11 +34,12 @@ public class EditProjectCommand extends BaseCommand {
             \t%s | %s <name> [--%s <newName>] [--%s <desc>] [--%s <date>]
             \t  --%s <name>        Update the project name (optional)
             \t  --%s <description> Update the project description (optional)
-            \t  --%s <dueDate>     Update the due date (Format: dd.MM.yyyy [HH:mm])
+            \t  --%s <dueDate>     Update the due date (Format: %s)
             """.formatted(
                 getKey(), getShortcut(),
                 NAME_FLAG, DESCRIPTION_FLAG, DUE_DATE_FLAG,
-                NAME_FLAG, DESCRIPTION_FLAG, DUE_DATE_FLAG
+                NAME_FLAG, DESCRIPTION_FLAG, DUE_DATE_FLAG,
+                DateTimeUtil.FORMAT
             );
     }
 }

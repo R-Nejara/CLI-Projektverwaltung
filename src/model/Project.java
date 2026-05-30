@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import src.utils.DateTimeUtil;
 
 public class Project {
     private final UUID id;
@@ -72,7 +73,7 @@ public class Project {
 
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateTimeUtil.SIMPLE_FORMAT);
         String due = (dueDate != null) ? dueDate.format(formatter) : "-";
 
         StringBuilder sb = new StringBuilder();

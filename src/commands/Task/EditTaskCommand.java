@@ -41,11 +41,12 @@ public class EditTaskCommand extends BaseCommand {
             \t  --%s <description> Update the task description (optional)
             \t  --%s <state>       Update the task state (optional)
             \t  --%s <priority>    Update the task priority (optional)
-            \t  --%s <dueDate>     Set a due date (Format: dd.MM.yyyy [HH:mm])
+            \t  --%s <dueDate>     Set a due date (Format: %s)
             """.formatted(
                 getKey(), getShortcut(),
                 NAME_FLAG, DESCRIPTION_FLAG, STATE_FLAG, PRIORITY_FLAG, DUE_DATE_FLAG,
-                NAME_FLAG, DESCRIPTION_FLAG, STATE_FLAG, PRIORITY_FLAG, DUE_DATE_FLAG
+                NAME_FLAG, DESCRIPTION_FLAG, STATE_FLAG, PRIORITY_FLAG, DUE_DATE_FLAG,
+                DateTimeUtil.FORMAT
             );
     }
 }

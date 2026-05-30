@@ -32,11 +32,12 @@ public class AddProjectCommand extends BaseCommand {
             \t%s | %s --%s <name> [--%s <desc>] [--%s <date>]
             \t  --%s <name>        Set the project name
             \t  --%s <description> Set the project description (optional)
-            \t  --%s <dueDate>     Set a due date (Format: dd.MM.yyyy [HH:mm])
+            \t  --%s <dueDate>     Set a due date (%s)
             """.formatted(
                 getKey(), getShortcut(),
                 NAME_FLAG, DESCRIPTION_FLAG, DUE_DATE_FLAG,
-                NAME_FLAG, DESCRIPTION_FLAG, DUE_DATE_FLAG
+                NAME_FLAG, DESCRIPTION_FLAG, DUE_DATE_FLAG,
+                DateTimeUtil.FORMAT
             );
     }
 }

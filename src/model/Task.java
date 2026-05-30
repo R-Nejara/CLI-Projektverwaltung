@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import src.utils.DateTimeUtil;
 
 public class Task {
     private String title;
@@ -104,7 +105,7 @@ public class Task {
 
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateTimeUtil.SIMPLE_FORMAT);
         String due = (dueDate != null) ? dueDate.format(formatter) : "-";
         String assigned = assignees.isEmpty() ? "-" : assignees.stream().map(m -> "%s (%s)".formatted(m.getName(), m.getRole())).collect(Collectors.joining(", "));
 

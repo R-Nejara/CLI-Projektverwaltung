@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import src.utils.DateTimeUtil;
 
 public class DefaultModel implements Model {
     private static final String SEP = "|";
@@ -16,7 +17,7 @@ public class DefaultModel implements Model {
     private static final String MEMBER_PREFIX = "MEMBER";
     private static final String PROJECT_DIVIDER = "###";
     private static final String NULL_VALUE = "null";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DateTimeUtil.SIMPLE_FORMAT);
     private final String filePath;
 
     public DefaultModel(String filePath) {
