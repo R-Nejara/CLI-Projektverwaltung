@@ -10,13 +10,13 @@ public class ShowProjectCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        String name = super.getArg(args, 0);
+        final String name = getArg(args, 0);
 
         controller.showProject(name);
     }
 
     @Override 
     public String toString() {
-        return "\t%s | %s <name>\n".formatted(super.getKey(), super.getShortcut());
+        return "\t%s | %s <name>\n".formatted(getKey(), getShortcut());
     }
 }

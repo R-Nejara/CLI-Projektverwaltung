@@ -10,13 +10,13 @@ public class ListProjectCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        final String filter = super.getArg(args, 0);
+        final String filter = getArg(args, 0);
 
         controller.listProjects(filter);
     }
 
     @Override 
     public String toString() {
-        return "\t%s | %s [<filter>]\n".formatted(super.getKey(), super.getShortcut());
+        return "\t%s | %s [<filter>]\n".formatted(getKey(), getShortcut());
     }
 }

@@ -7,32 +7,28 @@ import src.controller.Controller;
 import src.utils.DateTimeUtil;
 
 public class EditTaskCommand extends BaseCommand {
+    private static final String NAME_FLAG = "n";
+    private static final String DESCRIPTION_FLAG = "d";
+    private static final String STATE_FLAG = "s";
+    private static final String PRIORITY_FLAG = "p";
+    private static final String DUE_DATE_FLAG = "t";
+
     public EditTaskCommand(Controller controller) {
         super(controller, "edit", "e", 1);
     }
 
     @Override
     public void execute(String[] args) {
-        final String projectName = super.getArg(args, 0);
-        final String taskName = super.getArg(args, 1);
-        String newName = null, description = null, state = null, priority = null;
-        LocalDateTime dueDate = null;
+        final String projectName = getArg(args, 0);
+        final String taskName = getArg(args, 1);
 
-        Map<String, String> flags = super.getFlags(args);
-
-        for (Map.Entry<String, String> entry : flags.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            switch (key) {
-                case "n" -> newName = value;
-                case "d" -> description = value;
-                case "s" -> state = value;
-                case "p" -> priority = value;
-                case "t" -> dueDate = DateTimeUtil.parseDateTime(value); 
-                default -> {}
-            }
-        }
+        final Map<String, String> flags = getFlags(args);
+        final String newName = flags.get(NAME_FLAG);
+        final String description = flags.get(DESCRIPTION_FLAG);
+        final String state = flags.get(STATE_FLAG);
+        final String priority = flags.get(PRIORITY_FLAG);
+        final String dueDateFlagValue = flags.get(DUE_DATE_FLAG);
+        final LocalDateTime dueDate = DateTimeUtil.parseDateTime(dueDateFlagValue);
 
         controller.editTask(projectName, taskName, newName, description, state, priority, dueDate);
     }
@@ -40,12 +36,16 @@ public class EditTaskCommand extends BaseCommand {
     @Override 
     public String toString() {
         return """
-            \t%s | %s <projectName> <taskName> [--n <newName>] [--d <desc>] [--s <state>] [--p <priority>] [--t <date>]
-            \t  --n <newName>     Update the task name (optional)
-            \t  --d <description> Update the task description (optional)
-            \t  --s <state>       Update the task state (optional)
-            \t  --p <priority>    Update the task priority (optional)
-            \t  --t <dueDate>     Set a due date (Format: dd.MM.yyyy [HH:mm])
-            """.formatted(super.getKey(), super.getShortcut());
+            \t%s | %s <projectName> <taskName> [--%s <newName>] [--%s <desc>] [--%s <state>] [--%s <priority>] [--%s <date>]
+            \t  --%s <newName>     Update the task name (optional)
+            \t  --%s <description> Update the task description (optional)
+            \t  --%s <state>       Update the task state (optional)
+            \t  --%s <priority>    Update the task priority (optional)
+            \t  --%s <dueDate>     Set a due date (Format: dd.MM.yyyy [HH:mm])
+            """.formatted(
+                getKey(), getShortcut(),
+                NAME_FLAG, DESCRIPTION_FLAG, STATE_FLAG, PRIORITY_FLAG, DUE_DATE_FLAG,
+                NAME_FLAG, DESCRIPTION_FLAG, STATE_FLAG, PRIORITY_FLAG, DUE_DATE_FLAG
+            );
     }
 }

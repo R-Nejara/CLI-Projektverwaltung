@@ -6,10 +6,10 @@ import src.controller.Controller;
 public class TaskCommand extends BaseCommand {
     public TaskCommand(Controller controller) {
         super(controller, "task", "t", 0);
-        super.registerSubCommand(new AddTaskCommand(controller));
-        super.registerSubCommand(new ListTaskCommand(controller));
-        super.registerSubCommand(new EditTaskCommand(controller));
-        super.registerSubCommand(new RemoveTaskCommand(controller));
-        super.registerSubCommand(new HelpTaskCommand(controller, this));
+        registerSubCommand(new AddTaskCommand(controller));
+        registerSubCommand(new ListTaskCommand(controller));
+        registerSubCommand(new EditTaskCommand(controller));
+        registerSubCommand(new RemoveTaskCommand(controller));
+        registerSubCommand(new HelpTaskCommand(controller, this));
     }
 }

@@ -7,29 +7,23 @@ import src.controller.Controller;
 import src.utils.DateTimeUtil;
 
 public class EditProjectCommand extends BaseCommand {
+    private static final String NAME_FLAG = "n";
+    private static final String DESCRIPTION_FLAG = "d";
+    private static final String DUE_DATE_FLAG = "t";
+
     public EditProjectCommand(Controller controller) {
         super(controller, "edit", "e", 1);
     }
 
     @Override
     public void execute(String[] args) {
-        final String name = super.getArg(args, 0);
-        String newName = null, description = null;
-        LocalDateTime dueDate = null;
+        final String name = getArg(args, 0);
 
-        Map<String, String> flags = super.getFlags(args);
-
-        for (Map.Entry<String, String> entry : flags.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            switch (key) {
-                case "n" -> newName = value;
-                case "d" -> description = value;
-                case "t" -> dueDate = DateTimeUtil.parseDateTime(value);
-                default -> {}
-            }
-        }
+        final Map<String, String> flags = getFlags(args);
+        final String newName = flags.get(NAME_FLAG);
+        final String description = flags.get(DESCRIPTION_FLAG);
+        final String dueDateFlagValue = flags.get(DUE_DATE_FLAG);
+        final LocalDateTime dueDate = DateTimeUtil.parseDateTime(dueDateFlagValue);
 
         controller.editProject(name, newName, description, dueDate);
     }
@@ -37,10 +31,14 @@ public class EditProjectCommand extends BaseCommand {
     @Override 
     public String toString() {
         return """
-            \t%s | %s <name> [--n <newName>] [--d <desc>] [--t <date>]
-            \t  --n <name>        Update the project name (optional)
-            \t  --d <description> Update the project description (optional)
-            \t  --t <dueDate>     Update the due date (Format: dd.MM.yyyy [HH:mm])
-            """.formatted(super.getKey(), super.getShortcut());
+            \t%s | %s <name> [--%s <newName>] [--%s <desc>] [--%s <date>]
+            \t  --%s <name>        Update the project name (optional)
+            \t  --%s <description> Update the project description (optional)
+            \t  --%s <dueDate>     Update the due date (Format: dd.MM.yyyy [HH:mm])
+            """.formatted(
+                getKey(), getShortcut(),
+                NAME_FLAG, DESCRIPTION_FLAG, DUE_DATE_FLAG,
+                NAME_FLAG, DESCRIPTION_FLAG, DUE_DATE_FLAG
+            );
     }
 }

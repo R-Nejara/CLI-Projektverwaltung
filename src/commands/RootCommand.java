@@ -8,8 +8,8 @@ import src.controller.Controller;
 public class RootCommand extends BaseCommand {
     public RootCommand(Controller controller) {
         super(controller, "root", "r", 0);
-        super.registerSubCommand(new ProjectCommand(controller));
-        super.registerSubCommand(new TaskCommand(controller));
-        super.registerSubCommand(new MemberCommand(controller));
+        registerSubCommand(new ProjectCommand(controller));
+        registerSubCommand(new TaskCommand(controller));
+        registerSubCommand(new MemberCommand(controller));
     }
 }

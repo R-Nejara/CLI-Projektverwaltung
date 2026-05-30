@@ -11,14 +11,13 @@ public class RemoveTaskCommand extends BaseCommand {
 
     @Override
     public void execute(String[] args) {
-        String projectName = super.getArg(args, 0);
-        String[] taskNames = super.getSubArgs(args);
+        final String projectName = getArg(args, 0);
 
-        controller.removeTasks(projectName, Set.of(taskNames));
+        controller.removeTasks(projectName, Set.of(getSubArgs(args)));
     }
 
     @Override 
     public String toString() {
-        return "\t%s | %s <projectName> <taskName>...\n".formatted(super.getKey(), super.getShortcut());
+        return "\t%s | %s <projectName> <taskName>...\n".formatted(getKey(), getShortcut());
     }
 }

@@ -5,37 +5,35 @@ import src.commands.BaseCommand;
 import src.controller.Controller;
 
 public class AddMemberCommand extends BaseCommand {
+    private static final String NAME_FLAG = "n";
+    private static final String ROLE_FLAG = "r";
+
     public AddMemberCommand(Controller controller) {
         super(controller, "add", "a", 1);
     }
 
     @Override
     public void execute(String[] args) {
-        final String projectName = super.getArg(args, 0);
-        final String taskName = super.getArg(args, 1);
-        String name = null, role = null;
+        final String projectName = getArg(args, 0);
+        final String taskName = getArg(args, 1);
 
-        Map<String, String> flags = super.getFlags(args);
+        final Map<String, String> flags = getFlags(args);
+        final String name = flags.get(NAME_FLAG);
+        final String role = flags.get(ROLE_FLAG);
 
-        for (Map.Entry<String, String> entry : flags.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            switch (key) {
-                case "n" -> name = value;
-                case "r" -> role = value;
-                default -> {}
-            }
-        }
         controller.addAssignee(projectName, taskName, name, role);
     }
 
     @Override 
     public String toString() {
         return """
-            \t%s | %s <projectName> <taskName> --n <name> [--r <role>]
-            \t  --n <name>        Set the member name
-            \t  --r <role>        Set the member role (optional)
-            """.formatted(super.getKey(), super.getShortcut());
+            \t%s | %s <projectName> <taskName> --%s <name> [--%s <role>]
+            \t  --%s <name>        Set the member name
+            \t  --%s <role>        Set the member role (optional)
+            """.formatted(
+                getKey(), getShortcut(),
+                NAME_FLAG, ROLE_FLAG,
+                NAME_FLAG, ROLE_FLAG
+            );
     }
 }

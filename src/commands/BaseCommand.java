@@ -11,21 +11,21 @@ public abstract class BaseCommand implements Command {
 
     private final Map<String, Command> subCommands = new LinkedHashMap<>();
     protected final Controller controller;
-    private final String KEY;
-    private final String SHORTCUT;
+    private final String key;
+    private final String shortcut;
     private final int commandLevel;
 
     /**
      * Initializes a new instance of the BaseCommand class with the specified parameters.
-     * @param controller
-     * @param key
-     * @param shortcut
-     * @param commandLevel
+     * @param controller the controller to be used by the command
+     * @param key the key that identifies the command
+     * @param shortcut the shortcut that identifies the command
+     * @param commandLevel the level of the command in the command hierarchy
      */
     protected BaseCommand(Controller controller, String key, String shortcut, int commandLevel) {
         this.controller = controller;
-        this.KEY = key.toLowerCase();
-        this.SHORTCUT = BaseCommand.SHORTCUT_SYMBOL + shortcut.toLowerCase();
+        this.key = key.toLowerCase();
+        this.shortcut = BaseCommand.SHORTCUT_SYMBOL + shortcut.toLowerCase();
         this.commandLevel = commandLevel;
     }
 
@@ -57,12 +57,12 @@ public abstract class BaseCommand implements Command {
 
     @Override
     public String getKey() {
-        return this.KEY;
+        return this.key;
     }
 
     @Override
     public String getShortcut() {
-        return this.SHORTCUT;
+        return this.shortcut;
     }
 
 //-------------------------------------------------------------------------
@@ -105,8 +105,8 @@ public abstract class BaseCommand implements Command {
      * Retrieves the argument at the specified index from the given array of arguments.
      * Validates that the argument is not null, not blank, and starts with a letter.
      *
-     * @param args
-     * @param index
+     * @param args the array of arguments
+     * @param index the index of the argument to retrieve
      * @return
      */
     protected String getArg(String[] args, Integer index) {
@@ -166,20 +166,24 @@ public abstract class BaseCommand implements Command {
      * @return a map of flags and their corresponding values
      */
     protected Map<String, String> getFlags(String[] args) {
-        Map<String, String> flags = new LinkedHashMap<>();
+        final Map<String, String> flags = new LinkedHashMap<>();
+        if (args == null) {
+            return flags;
+        }
 
-        for (int i=0; i < args.length-1; i++) {
-            String arg = args[i];
+        for (int i = 0; i < args.length - 1; i++) {
+            final String arg = args[i];
 
-            if (!isFlag(arg)) { continue; }
+            if (!isFlag(arg)) { 
+                continue; 
+            }
 
-            String flag = !arg.isBlank() ? arg : null;
-            String value = args[i+1];
+            final String flagKey = arg.substring(BaseCommand.FLAG_SYMBOL.length());
+            final String value = args[i + 1];
             
-            if (flag != null && value != null) { 
-                flag = flag.replaceAll(BaseCommand.FLAG_SYMBOL, "");
-                flags.put(flag, value);
-                i++;
+            if (value != null) { 
+                flags.put(flagKey, value);
+                i++; // Skip the value in the next iteration
             }
         }
         return flags;

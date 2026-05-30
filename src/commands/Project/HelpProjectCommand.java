@@ -6,6 +6,7 @@ import src.controller.Controller;
 
 public class HelpProjectCommand extends BaseCommand {
     private final Command command;
+    
     public HelpProjectCommand(Controller controller, Command command) {
         super(controller, "help", "h", 1);
         this.command = command;
@@ -18,6 +19,6 @@ public class HelpProjectCommand extends BaseCommand {
 
     @Override 
     public String toString() {
-        return "\t%s | %s\n".formatted(super.getKey(), super.getShortcut());
+        return "\t%s | %s\n".formatted(getKey(), getShortcut());
     }
 }

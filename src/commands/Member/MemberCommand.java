@@ -6,9 +6,9 @@ import src.controller.Controller;
 public class MemberCommand extends BaseCommand {
     public MemberCommand(Controller controller) {
         super(controller, "member", "m", 0);
-        super.registerSubCommand(new AddMemberCommand(controller));
-        super.registerSubCommand(new EditMemberCommand(controller));
-        super.registerSubCommand(new RemoveMemberCommand(controller));
-        super.registerSubCommand(new HelpMemberCommand(controller, this));
+        registerSubCommand(new AddMemberCommand(controller));
+        registerSubCommand(new EditMemberCommand(controller));
+        registerSubCommand(new RemoveMemberCommand(controller));
+        registerSubCommand(new HelpMemberCommand(controller, this));
     }
 }

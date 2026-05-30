@@ -18,6 +18,6 @@ public class HelpMemberCommand extends BaseCommand {
 
     @Override 
     public String toString() {
-        return "\t%s | %s\n".formatted(super.getKey(), super.getShortcut());
+        return "\t%s | %s\n".formatted(getKey(), getShortcut());
     }
 }
