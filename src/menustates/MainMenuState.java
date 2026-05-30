@@ -23,9 +23,9 @@ public class MainMenuState implements MenuState {
     public MenuState handle() {
         final String[] options = menuActions.keySet().toArray(String[]::new);
         final String errorMsg = "Invalid option. Please select a valid option from the menu.";
-        final Integer selection = view.readUserInput(options, errorMsg, true);
+        final int selection = view.readUserInput(options, errorMsg, true);
 
-        if (selection == null || selection < 1 || selection > options.length) { return this; }
+        if (selection < 1 || selection > options.length) { return this; }
 
         final String selectedKey = options[selection - 1];
 

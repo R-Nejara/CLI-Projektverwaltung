@@ -108,7 +108,7 @@ public abstract class BaseController implements Controller {
     @Override
     public void editProject(String name, String newName, String description, LocalDateTime dueDate) {
         Project project = getProjectByName(name);
-        Boolean projectUpdated = false;
+        boolean projectUpdated = false;
 
         if (project == null) { return; } 
 
@@ -151,7 +151,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void removeProjects(Set<String> projectNames) {
-        Integer projectCount = this.projects.size();
+        int projectCount = this.projects.size();
 
         if (this.projects.isEmpty()) {
             view.printError("No Projects available.");
@@ -256,7 +256,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void editTask(String projectName, String taskName, String newName, String description, String state, String priority, LocalDateTime dueDate) {
-        Boolean projectUpdated = false;
+        boolean projectUpdated = false;
         Project project = getProjectByName(projectName);
         if (project == null) { return; }
 
@@ -317,7 +317,7 @@ public abstract class BaseController implements Controller {
     public void removeTasks(String projectName, Set<String> taskNames) {
         Project project = getProjectByName(projectName);
         if (project == null) { return; }
-        Integer taskCount = project.getTasks().size();
+        int taskCount = project.getTasks().size();
 
         for (String taskName : taskNames) {
             Task task = getTaskByName(project, taskName);
@@ -388,7 +388,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void editAssignee(String projectName, String taskName, String memberName, String name, String role) {
-        Boolean projectUpdated = false;
+        boolean projectUpdated = false;
         Project project = getProjectByName(projectName);
         if (project == null) { return; }
 
@@ -428,7 +428,7 @@ public abstract class BaseController implements Controller {
         Task task = getTaskByName(project, taskName);
         if (task == null) { return; }
 
-        Integer taskCount = task.getAssignees().size();
+        int taskCount = task.getAssignees().size();
 
         for (String assigneeName : assigneeNames) {
             Member member = getAssigneeByName(project, taskName, assigneeName);
@@ -468,13 +468,13 @@ public abstract class BaseController implements Controller {
                 .toList();
     }
 
-    private Boolean isNameUnique(String name, List<String> names) {
+    private boolean isNameUnique(String name, List<String> names) {
         if (name == null || name.isBlank()) { return false; }
 
         return names.stream().noneMatch(n -> n.equalsIgnoreCase(name));
     }
 
-    private Boolean nameIsValid(String input) {
+    private boolean nameIsValid(String input) {
         if (input == null || input.isBlank()) { return false; }
 
         return Character.isLetter(input.charAt(0)) && !input.contains("|");

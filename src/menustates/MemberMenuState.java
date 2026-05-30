@@ -39,9 +39,9 @@ public class MemberMenuState implements MenuState {
     public MenuState handle() {
         final String[] options = menuActions.keySet().toArray(String[]::new);
         final String errorMsg = "Invalid option. Please select a valid option from the menu.";
-        final Integer selection = view.readUserInput(options, errorMsg, true);
+        final int selection = view.readUserInput(options, errorMsg, true);
 
-        if (selection == null || selection < 1 || selection > options.length) { return this; }
+        if (selection < 1 || selection > options.length) { return this; }
 
         final String selectedKey = options[selection - 1];
 
@@ -77,7 +77,7 @@ public class MemberMenuState implements MenuState {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-    private MemberAttributes readAttributes(Boolean askForNewName, Boolean askForRole, boolean skipHeader) {
+    private MemberAttributes readAttributes(boolean askForNewName, boolean askForRole, boolean skipHeader) {
         final Pattern namePattern = Pattern.compile("^([a-zA-Z][^|]*|)$");
         final boolean shouldClear = !skipHeader;
 

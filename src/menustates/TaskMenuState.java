@@ -47,9 +47,9 @@ public class TaskMenuState implements MenuState {
     public MenuState handle() {
         final String[] options = menuActions.keySet().toArray(String[]::new);
         final String errorMsg = "Invalid option. Please select a valid option from the menu.";
-        final Integer selection = view.readUserInput(options, errorMsg, true);
+        final int selection = view.readUserInput(options, errorMsg, true);
 
-        if (selection == null || selection < 1 || selection > options.length) { return this; }
+        if (selection < 1 || selection > options.length) { return this; }
 
         final String selectedKey = options[selection - 1];
 
@@ -104,7 +104,7 @@ public class TaskMenuState implements MenuState {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-    private TaskAttributes readAttributes(Boolean askForTaskName, Boolean askForNewName,Boolean askForDescription, Boolean askForState, Boolean askForPriority, Boolean askForDueDate, Boolean skipHeader) {
+    private TaskAttributes readAttributes(boolean askForTaskName, boolean askForNewName,boolean askForDescription, boolean askForState, boolean askForPriority, boolean askForDueDate, boolean skipHeader) {
         final boolean shouldClear = !skipHeader;
 
         controller.listProjects(null);

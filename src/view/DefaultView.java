@@ -1,11 +1,10 @@
 package src.view;
 
-import java.util.Scanner;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 import src.model.Project;
 import src.model.Task;
-import src.view.ConsoleFormatter;
 
 public class DefaultView implements View {
     Scanner scanner = new Scanner(System.in);
@@ -18,7 +17,7 @@ public class DefaultView implements View {
      * @param printHeader Schalter für das darstellen der Überschrift
      */
     @Override
-    public String readUserInput(String message, Pattern pattern, String errorMessage, Boolean printHeader) {
+    public String readUserInput(String message, Pattern pattern, String errorMessage, boolean printHeader) {
         String userInput;
         if (printHeader) {
             ConsoleFormatter.clear();
@@ -36,7 +35,7 @@ public class DefaultView implements View {
     }
 
     @Override
-    public Integer readUserInput(String[] options, String errorMessage, Boolean printHeader) {
+    public int readUserInput(String[] options, String errorMessage, boolean printHeader) {
         String userInput;
         int parsedUserInput;
         ConsoleFormatter.clear();

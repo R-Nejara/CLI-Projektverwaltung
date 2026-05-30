@@ -10,7 +10,7 @@ public class BackupView implements View {
     private final Scanner scanner = new Scanner(System.in);
 
     @Override
-    public String readUserInput(String message, Pattern pattern, String errorMessage, Boolean printHeader) {
+    public String readUserInput(String message, Pattern pattern, String errorMessage, boolean printHeader) {
         String userInput;
 
         if (printHeader) {
@@ -31,7 +31,7 @@ public class BackupView implements View {
     }
 
     @Override
-    public Integer readUserInput(String[] options, String errorMessage, Boolean printHeader) {
+    public int readUserInput(String[] options, String errorMessage, boolean printHeader) {
         String userInput;
 
         if (printHeader) {

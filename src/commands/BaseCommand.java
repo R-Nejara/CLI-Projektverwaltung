@@ -109,8 +109,8 @@ public abstract class BaseCommand implements Command {
      * @param index the index of the argument to retrieve
      * @return
      */
-    protected String getArg(String[] args, Integer index) {
-        if (args == null || index == null || index < 0 || index >= args.length) {
+    protected String getArg(String[] args, int index) {
+        if (args == null || index < 0 || index >= args.length) {
             return null;
         }
         String arg = args[index];
