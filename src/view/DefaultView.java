@@ -110,6 +110,17 @@ public class DefaultView implements View {
 
     @Override
     public void printProject(Project project) {}
+
+    @Override
+    public void waitForKeyPress() {
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
+    }
+
+//-------------------------------------------------------------------------
+// Section: Private Methoden
+//-------------------------------------------------------------------------
+
      private int getTaskStateCount(List<Task> tasks, boolean completed){
         return tasks.stream().filter(task -> {
            return completed ? task.getState().equals(State.DONE) : task.getState().equals(State.IN_PROGRESS) || task.getState().equals(State.OPEN);
