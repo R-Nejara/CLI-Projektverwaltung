@@ -19,7 +19,6 @@ public class Task {
     private final List<Member> assignees = new ArrayList<>();
     private LocalDateTime dueDate;
 
-    // Hauptkonstruktor
     public Task(String title, String description, State state, Priority priority, List<Member> assignees, LocalDateTime dueDate) {
         setTitle(title);
         setDescription(description);
