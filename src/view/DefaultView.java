@@ -121,7 +121,7 @@ public class DefaultView implements View {
     }
 
     @Override
-    public void listMembers(List<Member> members){
+    public void printMembers(List<Member> members){
         final int WHITESPACE = 15;
         System.out.printf("┌%s Mitglieder %s┐\n", "─".repeat(WHITESPACE * 2), "─".repeat(WHITESPACE * 2));
         for (Member member : members) {

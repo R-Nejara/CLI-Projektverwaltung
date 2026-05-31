@@ -116,5 +116,5 @@ public class BackupView implements View {
     }
 
     @Override
-    public void listMembers(List<Member> members){}
+    public void printMembers(List<Member> members){}
 }
