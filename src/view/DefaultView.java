@@ -87,20 +87,21 @@ public class DefaultView implements View {
         int whitespace = 20;
         int boxlength = 110;
         
-        System.out.printf("\n%s Projekte %s\n\n", "─".repeat(19), "─".repeat(81));
+        System.out.printf("\n┌%s Projekte %s┐\n", "─".repeat(19), "─".repeat(81));
         for (Project project : projects) {
             counter++;
             System.out.printf(
-                    "%d. %s%s\tErledigt: %d\tBearbeitungsbeginn/Offen: %d\tDeadline: %s\n\n", counter,
+                    "│ %d. %s%s\tErledigt: %d\tBearbeitungsbeginn/Offen: %d\tDeadline: %s%s│\n", counter,
                     project.getTitle(),
                     " ".repeat(whitespace - project.getTitle().length()),
                     getTaskStateCount(project.getTasks(), true),
                     getTaskStateCount(project.getTasks(), false),
-                    project.getDueDate()
+                    project.getDueDate(),
+                    " ".repeat(5)
             );
 
         }
-        System.out.println("─".repeat(boxlength));
+        System.out.printf("└%s┘\n","─".repeat(boxlength));
     }
 
     @Override
