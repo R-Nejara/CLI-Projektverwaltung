@@ -254,7 +254,7 @@ public abstract class BaseController implements Controller {
         Task task = getTaskByNameOrNumber(project, taskName);
         if (task == null) { return; }
 
-        //view.printTask(task); //TODO: implement printTask in view
+        view.printTask(task);
     }
 
     /**
