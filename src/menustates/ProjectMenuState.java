@@ -99,14 +99,14 @@ public class ProjectMenuState implements MenuState {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-private ProjectAttributes readAttributes(boolean allowPorjectNumber, boolean askForNewName, boolean askForDescription, boolean askForDueDate, boolean skipHeader) {
+private ProjectAttributes readAttributes(boolean allowProjectNumber, boolean askForNewName, boolean askForDescription, boolean askForDueDate, boolean skipHeader) {
     final String nameError = "Project name must start with a letter and cannot contain a pipe character.";
     final boolean shouldClear = !skipHeader;
 
     controller.listProjects(null);
 
     final String projectName = view.readUserInput(
-        allowPorjectNumber ? "Enter project name or number:" : "Enter project name:", 
+        allowProjectNumber ? "Enter project name or number:" : "Enter project name:", 
         Project.NAME_PATTERN, nameError, shouldClear
     );
 
