@@ -1,25 +1,25 @@
 package src.model;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class Member {
     public static final Pattern NAME_PATTERN = Pattern.compile("^(?:([a-zA-Z][^|]*)?|[1-9]\\d*)$");
-    
+
     private final UUID id;
     private String name;
     private String role;
 
     public Member(UUID id, String name, String role) {
-        this.id = id;
-        this.name = name;
-        this.role = role;
+        this.id = Objects.requireNonNull(id, "ID darf nicht null sein");
+        
+        setName(name);
+        setRole(role);
     }
 
     public Member(String name, String role) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.role = role;
+        this(UUID.randomUUID(), name, role);
     }
 
 //-------------------------------------------------------------------------
@@ -34,13 +34,20 @@ public class Member {
 // Section: Setter
 //-------------------------------------------------------------------------
 
-    public void setName(String newName) {
-        if (newName != null && newName.isBlank()) { return; } //TODO: Error handling
+    public final void setName(String newName) {
+        if (newName == null) {
+            throw new IllegalArgumentException("Name darf nicht null sein.");
+        }
+        if (!NAME_PATTERN.matcher(newName).matches()) {
+            throw new IllegalArgumentException("Name entspricht nicht den Vorgaben (muss mit Buchstabe beginnen und darf keine Pipes enthalten).");
+        }
         this.name = newName;
     }
 
-    public void setRole(String newRole) {
-        if (newRole != null && newRole.isBlank()) { return; } //TODO: Error handling
+    public final void setRole(String newRole) {
+        if (newRole != null && newRole.isBlank()) {
+            throw new IllegalArgumentException("Rolle darf nicht nur aus Leerzeichen bestehen.");
+        }
         this.role = newRole;
     }
 
