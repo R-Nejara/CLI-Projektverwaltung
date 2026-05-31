@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import src.model.Project;
 import src.model.State;
 import src.model.Task;
+import src.model.Member;
 
 public class DefaultView implements View {
     Scanner scanner = new Scanner(System.in);
@@ -117,6 +118,9 @@ public class DefaultView implements View {
         System.out.println("\nDrücke die Eingabetaste um fortzusetzen...");
         scanner.nextLine();
     }
+
+    @Override
+    public void listMembers(List<Member> members){}
 
 //-------------------------------------------------------------------------
 // Section: Private Methoden
