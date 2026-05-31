@@ -4,8 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 import src.controller.Controller;
+import src.model.Member;
+import src.model.Project;
+import src.model.Task;
 import src.view.View;
 
 public class MemberMenuState implements MenuState {
@@ -26,6 +28,7 @@ public class MemberMenuState implements MenuState {
         this.view = view;
 
         menuActions.put("Add Member", () -> addMember());
+        menuActions.put("List Members", () -> listMembers());
         menuActions.put("Edit Member", () -> editMember());
         menuActions.put("Delete Member", () -> deleteMember());
         menuActions.put("Back to Main Menu", () -> previousState);
@@ -53,15 +56,24 @@ public class MemberMenuState implements MenuState {
 //-------------------------------------------------------------------------
 
     private MenuState addMember() {
-        MemberAttributes attributes = readAttributes(false, true, true);
+        MemberAttributes attributes = readAttributes(false, true, false, true, true);
 
         controller.addAssignee(attributes.projectName(), attributes.taskName(), attributes.memberName(), attributes.role());
         view.waitForKeyPress();
         return this;
     }
 
+    private MenuState listMembers() {
+        MemberAttributes attributes = readAttributes(true, false, false, false, true);
+        String filterString = view.readUserInput("Enter filter string (leave empty for no filter):", null, null, true);
+
+        controller.listMembers(attributes.projectName(), attributes.taskName(), filterString);
+        view.waitForKeyPress();
+        return this;
+    }
+
     private MenuState editMember() {
-        MemberAttributes attributes = readAttributes(true, true, true);
+        MemberAttributes attributes = readAttributes(true, true, true, true, true);
 
         controller.editAssignee(attributes.projectName(), attributes.taskName(), attributes.memberName(), attributes.newMemberName(), attributes.role());
         view.waitForKeyPress();
@@ -69,7 +81,7 @@ public class MemberMenuState implements MenuState {
     }
 
     private MenuState deleteMember() {
-        MemberAttributes attributes = readAttributes(false, false, true);
+        MemberAttributes attributes = readAttributes(true, true, true, false, true);
 
         controller.removeAssignees(attributes.projectName(), attributes.taskName(), Set.of(attributes.memberName()));
         view.waitForKeyPress();
@@ -80,28 +92,34 @@ public class MemberMenuState implements MenuState {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-    private MemberAttributes readAttributes(boolean askForNewName, boolean askForRole, boolean skipHeader) {
-        final Pattern namePattern = Pattern.compile("^([a-zA-Z][^|]*|)$");
+    private MemberAttributes readAttributes(boolean allowMemberNumber, boolean askForMemberName, boolean askForNewName, boolean askForRole, boolean skipHeader) {
         final boolean shouldClear = !skipHeader;
 
         controller.listProjects(null);
 
         String projectName = view.readUserInput(
-            "Enter Project name:", Pattern.compile(".+"), "Project name cannot be empty.", shouldClear
+            "Enter Project name or number:", Project.NAME_PATTERN, "Project name cannot be empty.", shouldClear
         );
 
         controller.listTasks(projectName, null);
 
         String taskName = view.readUserInput(
-            "Enter Task name:", Pattern.compile(".+"), "Task name cannot be empty.", shouldClear
+            "Enter Task name or number:", Task.NAME_PATTERN, "Task name cannot be empty.", shouldClear
         );
 
-        String memberName = view.readUserInput(
-            "Enter Member name:", Pattern.compile(".+"), "Member name cannot be empty.", shouldClear
-        );
+        if (allowMemberNumber) {
+            controller.listMembers(projectName, taskName, null);
+        }  
+
+        String memberName = askForMemberName ? view.readUserInput(
+            allowMemberNumber ? "Enter Member name or number:" : "Enter Member name:",
+            Member.NAME_PATTERN,
+            "Member name cannot be empty.",
+            shouldClear
+        ) : null;
 
         String newMemberName = askForNewName ? view.readUserInput(
-            "Enter new member name:", namePattern, "Member name must start with a letter and cannot contain a pipe character or must be empty to keep the current name.", shouldClear
+            "Enter new member name:", Member.NAME_PATTERN, "Member name must start with a letter and cannot contain a pipe character or must be empty to keep the current name.", shouldClear
         ) : null;
 
         String role = askForRole ? view.readUserInput(

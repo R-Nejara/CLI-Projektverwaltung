@@ -353,14 +353,15 @@ public abstract class BaseController implements Controller {
         Task task = getTaskByNameOrNumber(project, taskName);
         if (task == null) { return; }
 
-        if (name == null || name.isBlank()) {
-            view.printError("Member name cannot be empty or null.");
-            return;
-        } else if (!isNameUnique(name, getAssigneeNames(task))) {
-            view.printError("A member with the name '%s' already exists in task '%s'.".formatted(name, taskName));
-            return;
-        } else if (!nameIsValid(name)) {
-            view.printError("Member name must start with a letter and cannot contain the '|' character.");
+        if (name != null && name.isBlank()) {
+            if (!isNameUnique(name, getAssigneeNames(task))) {
+                view.printError("A member with the name '%s' already exists in task '%s'.".formatted(name, taskName));
+                return;
+            } else if (!nameIsValid(name)) {
+                view.printError("Member name must start with a letter and cannot contain the '|' character.");
+                return;
+            }
+            view.printError("Member name cannot be empty.");
             return;
         }
 
@@ -368,6 +369,34 @@ public abstract class BaseController implements Controller {
         task.addAssignees(newMember);
         model.saveProject(project);
         view.printMessage("Assignee added [Project: %s, Task: %s, Name: %s, Role: %s]".formatted(projectName, taskName, name, role));
+    }
+
+    /**
+     * Lists all members in the specified task, optionally filtered by a search term.
+     *
+     * @param projectName the name of the project containing the task
+     * @param taskName the name of the task containing the assignees
+     * @param filter the search term to filter members by (optional, may be null)
+     */
+    @Override
+    public void listMembers(String projectName, String taskName, String filter) {
+        String searchText = (filter != null) ? filter.toLowerCase() : "";
+        Project project = getProjectByNameOrNumber(projectName);
+        if (project == null) { return; }
+
+        Task task = getTaskByNameOrNumber(project, taskName);
+        if (task == null) { return; }
+
+        List<Member> results = task.getAssignees().stream()
+                                    .filter(m -> m.getName().toLowerCase().contains(searchText))
+                                    .toList();
+
+        if (results == null || results.isEmpty()) {
+            view.printWarning("No members found.");
+            return;
+        }
+
+        view.listMembers(results);
     }
 
     /**
@@ -389,7 +418,7 @@ public abstract class BaseController implements Controller {
         Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
-        Member member = getAssigneeByName(project, taskName, memberName);
+        Member member = getAssigneeByNameOrNumber(project, taskName, memberName);
         if (member == null) { return; }
 
         if (name != null && !name.isBlank() && !name.equals(member.getName())) {
@@ -428,7 +457,7 @@ public abstract class BaseController implements Controller {
         int taskCount = task.getAssignees().size();
 
         for (String assigneeName : assigneeNames) {
-            Member member = getAssigneeByName(project, taskName, assigneeName);
+            Member member = getAssigneeByNameOrNumber(project, taskName, assigneeName);
 
             if (member == null) { continue; }
             
@@ -532,13 +561,20 @@ public abstract class BaseController implements Controller {
         return result;
     }
 
-    private Member getAssigneeByName(Project project, String taskName, String name) {
+    private Member getAssigneeByNameOrNumber(Project project, String taskName, String name) {
         Task task = getTaskByNameOrNumber(project, taskName);
         if (task == null) { return null; }
 
         if (name == null || name.isBlank()) {
             view.printError("Assignee name cannot be empty or null.");
             return null;
+        }
+
+        if (name.matches("[1-9]\\d*")) {
+            int assigneeNumber = Integer.parseInt(name);
+            if (assigneeNumber > 0 && assigneeNumber <= task.getAssignees().size()) {
+                return task.getAssignees().get(assigneeNumber - 1);
+            }
         }
 
         Member result = task.getAssignees().stream()

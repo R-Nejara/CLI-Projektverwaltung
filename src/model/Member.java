@@ -1,8 +1,11 @@
 package src.model;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class Member {
+    public static final Pattern NAME_PATTERN = Pattern.compile("^(?:([a-zA-Z][^|]*)?|[1-9]\\d*)$");
+    
     private final UUID id;
     private String name;
     private String role;
