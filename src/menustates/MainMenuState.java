@@ -13,9 +13,9 @@ public class MainMenuState implements MenuState {
     public MainMenuState(Controller controller, View view) {
         this.view = view;
 
-        menuActions.put("Projects", () -> new ProjectMenuState(controller, view, this));
-        menuActions.put("Tasks", () -> new TaskMenuState(controller, view, this));
-        menuActions.put("Members", () -> new MemberMenuState(controller, view, this));
+        menuActions.put("Project", () -> new ProjectMenuState(controller, view, this));
+        menuActions.put("Task", () -> new TaskMenuState(controller, view, this));
+        menuActions.put("Member", () -> new MemberMenuState(controller, view, this));
         menuActions.put("Exit", () -> null); 
     }
     
