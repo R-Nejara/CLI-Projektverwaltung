@@ -112,7 +112,44 @@ public class DefaultView implements View {
     }
 
     @Override
-    public void printProject(Project project) {}
+    public void printProject(Project project) {
+        final int WHITESPACE = 15;
+        int spacingWithTitle = (WHITESPACE * 2) + project.getTitle().length() + 2;
+        int amountTaskInProgess = getTaskStateCount(project.getTasks(), false);
+        int amountTaskCompleted = getTaskStateCount(project.getTasks(), true);
+        int amountTasks = amountTaskInProgess + amountTaskCompleted;
+        String emptyLine = " ".repeat(spacingWithTitle);
+
+        // Project Title Format
+        System.out.printf("┌%s %s %s┐\n", "─".repeat(WHITESPACE), project.getTitle(), "─".repeat(WHITESPACE) );
+
+        // Project Description Title
+        System.out.printf("│ Projektbeschreibung:%s│", " ".repeat(spacingWithTitle - " Projektbeschreibung:".length()));
+
+        // Empty Line
+        System.out.printf("\n│%s│\n", emptyLine);
+
+        // Project Description Output
+        printWrapped(project.getDescription(), (WHITESPACE * 2) + project.getTitle().length());
+
+        // Empty line
+        System.out.printf("\n│%s│", emptyLine);
+
+        // Tasks
+        System.out.printf("\n│ Anzahl an Aufgaben: %d%s│", amountTaskCompleted, " ".repeat(spacingWithTitle - String.valueOf(amountTasks).length() - " Anzahl an Aufgaben: ".length()));
+        System.out.printf("\n│ Bearbeitete: %d%s│", amountTaskCompleted, " ".repeat(spacingWithTitle - String.valueOf(amountTaskCompleted).length() - " Bearbeitete: ".length()));
+        System.out.printf("\n│ In Bearbeitung/Offen: %d%s│", amountTaskInProgess, " ".repeat(spacingWithTitle - String.valueOf(amountTaskInProgess).length() - " In Bearbeitung/Offen: ".length()));
+
+        // Empty line
+        System.out.printf("\n│%s│\n", emptyLine);
+
+        // Deadline Output
+        System.out.printf("│ Deadline: %s%s│", project.getDueDate(), " ".repeat(spacingWithTitle - " Deadline: ".length() - String.valueOf(project.getDueDate()).length()));
+
+        // Box Close
+        System.out.printf("\n└%s┘", "─".repeat(spacingWithTitle));
+
+    }
 
     @Override
     public void waitForKeyPress() {
@@ -139,4 +176,22 @@ public class DefaultView implements View {
            return completed ? task.getState().equals(State.DONE) : task.getState().equals(State.IN_PROGRESS) || task.getState().equals(State.OPEN);
         }).toList().size();
     }
+
+// limit width of description string
+    private static void printWrapped(String text, int width) {
+        if (text == null) {
+            text = "-";
+        }
+
+        for (int i = 0; i < text.length(); i += width) {
+            if (text.substring(i, Math.min(i + width, text.length())).length() != width) {
+                System.out.printf("│ %s%s │", text.substring(i, Math.min(i + width, text.length())) , " ".repeat(width - text.substring(i, Math.min(i + width, text.length())).length()));
+            } else {
+                System.out.printf("│ %s │\n", text.substring(i, Math.min(i + width, text.length())));
+            }
+
+        }
 }
+
+}
+
