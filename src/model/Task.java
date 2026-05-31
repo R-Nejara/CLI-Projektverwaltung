@@ -4,100 +4,119 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import src.utils.DateTimeUtil;
 
 public class Task {
     public static final Pattern NAME_PATTERN = Pattern.compile("^(?:([a-zA-Z][^|]*)?|[1-9]\\d*)$");
-    
+
     private String title;
     private String description;
     private State state;
     private Priority priority;
-    private List<Member> assignees = new ArrayList<>();
+    private final List<Member> assignees = new ArrayList<>();
     private LocalDateTime dueDate;
 
+    // Hauptkonstruktor
     public Task(String title, String description, State state, Priority priority, List<Member> assignees, LocalDateTime dueDate) {
-        this.title = title;
-        this.description = description;
-        this.state = (state == null) ? State.OPEN : state;
-        this.priority = (priority == null) ? Priority.MEDIUM : priority;
-        this.assignees = assignees;
-        this.dueDate = dueDate;
+        setTitle(title);
+        setDescription(description);
+        this.state = (state != null) ? state : State.OPEN;
+        this.priority = (priority != null) ? priority : Priority.MEDIUM;
+        setDueDate(dueDate);
+        
+        if (assignees != null) {
+            this.assignees.addAll(assignees);
+        }
     }
 
     public Task(String title, String description, String state, String priority, LocalDateTime dueDate) {
-        this.title = title;
-        this.description = description;
-        this.state = (state == null) ? State.OPEN : parseState(state);
-        this.priority = (priority == null) ? Priority.MEDIUM : parsePriority(priority);
-        this.dueDate = dueDate;
-
+        setTitle(title);
+        setDescription(description);
+        this.state = parseState(state);
+        this.priority = parsePriority(priority);
+        setDueDate(dueDate);
     }
 
 //-------------------------------------------------------------------------
 // Section: Getter
 //-------------------------------------------------------------------------
 
-    public String getTitle() { return this.title; }
-    public String getDescription() { return this.description; }
-    public State getState() { return this.state; }
-    public Priority getPriority() { return this.priority; }
-    public List<Member> getAssignees() { return this.assignees; }
-    public LocalDateTime getDueDate() { return this.dueDate; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public State getState() { return state; }
+    public Priority getPriority() { return priority; }
+    public List<Member> getAssignees() { return List.copyOf(assignees); }
+    public LocalDateTime getDueDate() { return dueDate; }
 
 //-------------------------------------------------------------------------
 // Section: Setter
 //-------------------------------------------------------------------------
 
-    public void setTitle(String newTitle) {
-        if (newTitle != null && newTitle.isBlank()) { return; } //TODO: Error handling
+    public final void setTitle(String newTitle) {
+        if (newTitle == null) {
+            throw new IllegalArgumentException("Titel darf nicht null sein.");
+        }
+        if (!NAME_PATTERN.matcher(newTitle).matches()) {
+            throw new IllegalArgumentException("Titel entspricht nicht den Mustervorgaben.");
+        }
         this.title = newTitle;
     }
 
-    public void setDescription(String newDesciption) {
-        this.description = newDesciption;
+    public final void setDescription(String newDescription) { 
+        this.description = newDescription;
     }
 
-    public void setState(String newState) {
-        this.state = (newState == null) ? this.state : parseState(newState);
+    public final void setState(State newState) {
+        this.state = Objects.requireNonNull(newState, "Status darf nicht null sein.");
     }
 
-    public void setPriority(String newPriority) {
-        this.priority = (newPriority == null) ? this.priority : parsePriority(newPriority);
+    public final void setState(String newState) {
+        this.state = parseState(newState);
     }
 
-    public void addAssignees(Member... newMembers) {
-        if (newMembers == null) { return ; }
+    public final void setPriority(Priority newPriority) {
+        this.priority = Objects.requireNonNull(newPriority, "Priorität darf nicht null sein.");
+    }
+
+    public final void setPriority(String newPriority) {
+        this.priority = parsePriority(newPriority);
+    }
+
+    public final void addAssignees(Member... newMembers) {
+        if (newMembers == null) return;
         this.assignees.addAll(List.of(newMembers));
     }
 
-    public void removeAssignees(Member... members) {
-        if (members == null) { return; }
+    public final void removeAssignees(Member... members) {
+        if (members == null) return;
         this.assignees.removeAll(List.of(members));
     }
 
-    public void setDueDate(LocalDateTime newDueDate) {
-        this.dueDate = (newDueDate == null) ? this.dueDate : newDueDate;
+    public final void setDueDate(LocalDateTime newDueDate) {
+        this.dueDate = newDueDate;
     }
 
 //-------------------------------------------------------------------------
-// Section: private functions
+// Section: Helper methods
 //-------------------------------------------------------------------------
 
     private State parseState(String input) {
+        if (input == null) return State.OPEN;
         try {
-            return State.valueOf(input.toUpperCase());
-        } catch (Exception e) {
+            return State.valueOf(input.toUpperCase().trim());
+        } catch (IllegalArgumentException e) {
             return State.OPEN;
         }
     }
 
     private Priority parsePriority(String input) {
+        if (input == null) return Priority.MEDIUM;
         try {
-            return Priority.valueOf(input.toUpperCase());
-        } catch (Exception e) {
+            return Priority.valueOf(input.toUpperCase().trim());
+        } catch (IllegalArgumentException e) {
             return Priority.MEDIUM;
         }
     }
@@ -110,8 +129,14 @@ public class Task {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateTimeUtil.SIMPLE_FORMAT);
         String due = (dueDate != null) ? dueDate.format(formatter) : "-";
-        String assigned = assignees.isEmpty() ? "-" : assignees.stream().map(m -> "%s (%s)".formatted(m.getName(), m.getRole())).collect(Collectors.joining(", "));
+        
+        String assigned = assignees.isEmpty() 
+            ? "-" 
+            : assignees.stream()
+                       .map(m -> "%s (%s)".formatted(m.getName(), m.getRole()))
+                       .collect(Collectors.joining(", "));
 
-        return "[%s] %s\n  Beschreibung: %s\n  Status: %s\n  Priorität: %s\n  Fällig: %s\n  Zugewiesen: %s".formatted(state, title, description != null ? description : "-", state, priority, due, assigned);
+        return "[%s] %s\n  Beschreibung: %s\n  Priorität: %s\n  Fällig: %s\n  Zugewiesen: %s"
+                .formatted(state, title, description != null ? description : "-", priority, due, assigned);
     }
 }
