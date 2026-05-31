@@ -103,7 +103,9 @@ private ProjectAttributes readAttributes(boolean allowProjectNumber, boolean ask
     final String nameError = "Project name must start with a letter and cannot contain a pipe character.";
     final boolean shouldClear = !skipHeader;
 
-    controller.listProjects(null);
+    if (allowProjectNumber) {
+        controller.listProjects(null);
+    }
 
     final String projectName = view.readUserInput(
         allowProjectNumber ? "Enter project name or number:" : "Enter project name:", 
