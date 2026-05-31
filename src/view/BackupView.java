@@ -3,9 +3,9 @@ package src.view;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import src.model.Member;
 import src.model.Project;
 import src.model.Task;
-import src.model.Member;
 
 public class BackupView implements View {
     private final Scanner scanner = new Scanner(System.in);
@@ -116,5 +116,5 @@ public class BackupView implements View {
     }
 
     @Override
-    public void listMembers(List<Member> members){}
+    public void printMemberList(List<Member> members){}
 }
