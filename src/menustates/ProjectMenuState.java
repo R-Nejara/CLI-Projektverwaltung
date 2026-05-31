@@ -4,8 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 import src.controller.Controller;
+import src.model.Project;
 import src.utils.DateTimeUtil;
 import src.view.View;
 
@@ -55,14 +55,14 @@ public class ProjectMenuState implements MenuState {
 //-------------------------------------------------------------------------
 
     private MenuState addProject() {
-        ProjectAttributes attributes = readAttributes(false, true, true, true);
+        ProjectAttributes attributes = readAttributes(false, false, true, true, true);
 
         controller.addProject(attributes.projectName(), attributes.description(), DateTimeUtil.parseDateTime(attributes.dueDate()));
         return this;
     }
 
     private MenuState editProject() {
-        ProjectAttributes attributes = readAttributes(true, true, true, true);
+        ProjectAttributes attributes = readAttributes(true, true, true, true, true);
 
         controller.editProject(attributes.projectName(), attributes.newProjectName(), attributes.description(), DateTimeUtil.parseDateTime(attributes.dueDate()));
         return this;
@@ -77,14 +77,14 @@ public class ProjectMenuState implements MenuState {
     }
 
     private MenuState showProject() {
-        ProjectAttributes attributes = readAttributes(false, false, false, true);
+        ProjectAttributes attributes = readAttributes(true, false, false, false, true);
 
         controller.showProject(attributes.projectName());
         return this;
     }
 
     private MenuState deleteProject() {
-        ProjectAttributes attributes = readAttributes(false, false, false, true);
+        ProjectAttributes attributes = readAttributes(true, false, false, false, true);
 
         controller.removeProjects(Set.of(attributes.projectName()));
         return this;
@@ -94,17 +94,19 @@ public class ProjectMenuState implements MenuState {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-private ProjectAttributes readAttributes(boolean askForNewName, boolean askForDescription, boolean askForDueDate, boolean skipHeader) {
-    final Pattern namePattern = Pattern.compile("^([a-zA-Z][^|]*|)$");
+private ProjectAttributes readAttributes(boolean allowPorjectNumber, boolean askForNewName, boolean askForDescription, boolean askForDueDate, boolean skipHeader) {
     final String nameError = "Project name must start with a letter and cannot contain a pipe character.";
     final boolean shouldClear = !skipHeader;
 
     controller.listProjects(null);
 
-    final String projectName = view.readUserInput("Enter project name:", namePattern, nameError, shouldClear);
+    final String projectName = view.readUserInput(
+        allowPorjectNumber ? "Enter project name or number:" : "Enter project name:", 
+        Project.NAME_PATTERN, nameError, shouldClear
+    );
 
     final String newProjectName = askForNewName 
-        ? view.readUserInput("Enter new project name:", namePattern, nameError, shouldClear) 
+        ? view.readUserInput("Enter new project name:", Project.NAME_PATTERN, nameError, shouldClear) 
         : null;
 
     final String description = askForDescription 

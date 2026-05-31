@@ -87,7 +87,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void showProject(String name) {
-        Project project = getProjectByName(name);
+        Project project = getProjectByNameOrNumber(name);
         if (project == null) { return; } 
 
         view.printProject(project);
@@ -107,7 +107,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void editProject(String name, String newName, String description, LocalDateTime dueDate) {
-        Project project = getProjectByName(name);
+        Project project = getProjectByNameOrNumber(name);
         boolean projectUpdated = false;
 
         if (project == null) { return; } 
@@ -164,7 +164,7 @@ public abstract class BaseController implements Controller {
         }
 
         for (String projectName : projectNames) {
-            Project project = getProjectByName(projectName);
+            Project project = getProjectByNameOrNumber(projectName);
 
             if (project == null) { continue; }
 
@@ -195,7 +195,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void addTask(String projectName, String name, String description, String state, String priority, LocalDateTime dueDate) {
-        Project project = getProjectByName(projectName);
+        Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
         if (name == null || name.isBlank()) {
@@ -224,7 +224,7 @@ public abstract class BaseController implements Controller {
     @Override
     public void listTasks(String projectName,String filter) {
         String searchText = (filter != null) ? filter.toLowerCase() : "";
-        Project project = getProjectByName(projectName);
+        Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
         List<Task> results = project.getTasks().stream()
@@ -257,7 +257,7 @@ public abstract class BaseController implements Controller {
     @Override
     public void editTask(String projectName, String taskName, String newName, String description, String state, String priority, LocalDateTime dueDate) {
         boolean projectUpdated = false;
-        Project project = getProjectByName(projectName);
+        Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
         Task task = getTaskByName(project, taskName);
@@ -315,7 +315,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void removeTasks(String projectName, Set<String> taskNames) {
-        Project project = getProjectByName(projectName);
+        Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
         int taskCount = project.getTasks().size();
 
@@ -350,7 +350,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void addAssignee(String projectName, String taskName, String name, String role) {
-        Project project = getProjectByName(projectName);
+        Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
         Task task = getTaskByName(project, taskName);
@@ -389,7 +389,7 @@ public abstract class BaseController implements Controller {
     @Override
     public void editAssignee(String projectName, String taskName, String memberName, String name, String role) {
         boolean projectUpdated = false;
-        Project project = getProjectByName(projectName);
+        Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
         Member member = getAssigneeByName(project, taskName, memberName);
@@ -422,7 +422,7 @@ public abstract class BaseController implements Controller {
      */
     @Override
     public void removeAssignees(String projectName, String taskName, Set<String> assigneeNames) {
-        Project project = getProjectByName(projectName);
+        Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
         Task task = getTaskByName(project, taskName);
@@ -480,10 +480,17 @@ public abstract class BaseController implements Controller {
         return Character.isLetter(input.charAt(0)) && !input.contains("|");
     }
 
-    private Project getProjectByName(String name) {
+    private Project getProjectByNameOrNumber(String name) {
         if (name == null || name.isBlank()) {
             view.printError("Project name cannot be empty or null.");
             return null;
+        }
+
+        if (name.matches("[1-9]\\d*")) {
+            int projectNumber = Integer.parseInt(name);
+            if (projectNumber > 0 && projectNumber <= this.projects.size()) {
+                return this.projects.get(projectNumber - 1);
+            }
         }
 
         Project result = this.projects.stream()
