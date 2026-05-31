@@ -6,10 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 import src.controller.Controller;
 import src.model.Priority;
+import src.model.Project;
 import src.model.State;
+import src.model.Task;
 import src.utils.DateTimeUtil;
 import src.view.View;
 
@@ -61,7 +62,7 @@ public class TaskMenuState implements MenuState {
 //-------------------------------------------------------------------------
 
     private MenuState addTask() {
-        TaskAttributes attributes = readAttributes(true, false, true, true, true, true, true);
+        TaskAttributes attributes = readAttributes(false, true, false, true, true, true, true, true);
 
         LocalDateTime dueDate = DateTimeUtil.parseDateTime(attributes.dueDate());
         controller.addTask(attributes.projectName(), attributes.taskName(), attributes.description(), attributes.state(), attributes.priority(), dueDate);
@@ -70,7 +71,7 @@ public class TaskMenuState implements MenuState {
     }
 
     private MenuState listTasks() {
-        TaskAttributes attributes = readAttributes(false, false, false, false, false, false, true);
+        TaskAttributes attributes = readAttributes(true, false, false, false, false, false, false, true);
 
         String filterString = view.readUserInput("Enter filter string (leave empty for no filter):", null, null, true);
 
@@ -80,7 +81,7 @@ public class TaskMenuState implements MenuState {
     }
 
     private MenuState editTask() {
-        TaskAttributes attributes = readAttributes(true, true, true, true, true, true, true);
+        TaskAttributes attributes = readAttributes(true, true, true, true, true, true, true, true);
 
         controller.editTask(
             attributes.projectName(),
@@ -96,7 +97,7 @@ public class TaskMenuState implements MenuState {
     }
 
     private MenuState deleteTask() {
-        TaskAttributes attributes = readAttributes(true, false, false, false, false, false, true);
+        TaskAttributes attributes = readAttributes(true, true, false, false, false, false, false, true);
 
         controller.removeTasks(attributes.projectName(), Set.of(attributes.taskName()));
         view.waitForKeyPress();
@@ -107,24 +108,26 @@ public class TaskMenuState implements MenuState {
 // Section: private functions
 //-------------------------------------------------------------------------
 
-    private TaskAttributes readAttributes(boolean askForTaskName, boolean askForNewName,boolean askForDescription, boolean askForState, boolean askForPriority, boolean askForDueDate, boolean skipHeader) {
+    private TaskAttributes readAttributes(boolean allowTaskNumber, boolean askForTaskName, boolean askForNewName,boolean askForDescription, boolean askForState, boolean askForPriority, boolean askForDueDate, boolean skipHeader) {
         final boolean shouldClear = !skipHeader;
 
         controller.listProjects(null);
         String projectName = view.readUserInput(
-            "Enter project name:",  Pattern.compile(".+"), "Project name cannot be empty.", shouldClear
+            "Enter project name:", Project.NAME_PATTERN, "Project name cannot be empty, must start with a letter and cannot contain a pipe character.", shouldClear
         );
 
-        if (askForTaskName) {
+        if (askForTaskName && allowTaskNumber) {
             controller.listTasks(projectName, null);
         }
 
         String taskName = askForTaskName ?view.readUserInput(
-            "Enter task name:", Pattern.compile(".+"),"Task name cannot be empty.", shouldClear
+            allowTaskNumber ? "Enter task name or number:" : "Enter task name:",
+            Task.NAME_PATTERN,
+            "Task name cannot be empty.", shouldClear
         ) : null;
 
         String newTaskName = askForNewName ? view.readUserInput(
-            "Enter new task name (leave empty to keep current):", Pattern.compile("^([a-zA-Z][^|]*|)$"), "Task name must start with a letter and cannot contain a pipe character.", shouldClear
+            "Enter new task name (leave empty to keep current):", Task.NAME_PATTERN, "Task name must start with a letter and cannot contain a pipe character.", shouldClear
         ) : null;
 
         String description = askForDescription ? view.readUserInput(

@@ -260,7 +260,7 @@ public abstract class BaseController implements Controller {
         Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
-        Task task = getTaskByName(project, taskName);
+        Task task = getTaskByNameOrNumber(project, taskName);
         if (task == null) { return; } 
 
         if (newName == null || newName.isBlank()) {
@@ -320,7 +320,7 @@ public abstract class BaseController implements Controller {
         int taskCount = project.getTasks().size();
 
         for (String taskName : taskNames) {
-            Task task = getTaskByName(project, taskName);
+            Task task = getTaskByNameOrNumber(project, taskName);
 
             if (task == null) { continue; }
             
@@ -353,7 +353,7 @@ public abstract class BaseController implements Controller {
         Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
-        Task task = getTaskByName(project, taskName);
+        Task task = getTaskByNameOrNumber(project, taskName);
         if (task == null) { return; }
 
         if (name == null || name.isBlank()) {
@@ -425,7 +425,7 @@ public abstract class BaseController implements Controller {
         Project project = getProjectByNameOrNumber(projectName);
         if (project == null) { return; }
 
-        Task task = getTaskByName(project, taskName);
+        Task task = getTaskByNameOrNumber(project, taskName);
         if (task == null) { return; }
 
         int taskCount = task.getAssignees().size();
@@ -505,7 +505,7 @@ public abstract class BaseController implements Controller {
         return result;
     }
 
-    private Task getTaskByName(Project project, String name) {
+    private Task getTaskByNameOrNumber(Project project, String name) {
         if (project == null) { 
             view.printError("Project cannot be null.");
             return null;
@@ -514,6 +514,13 @@ public abstract class BaseController implements Controller {
         if (name == null || name.isBlank()) {
             view.printError("Task name cannot be empty or null.");
             return null;
+        }
+
+        if (name.matches("[1-9]\\d*")) {
+            int taskNumber = Integer.parseInt(name);
+            if (taskNumber > 0 && taskNumber <= project.getTasks().size()) {
+                return project.getTasks().get(taskNumber - 1);
+            }
         }
 
         Task result = project.getTasks().stream()
@@ -529,7 +536,7 @@ public abstract class BaseController implements Controller {
     }
 
     private Member getAssigneeByName(Project project, String taskName, String name) {
-        Task task = getTaskByName(project, taskName);
+        Task task = getTaskByNameOrNumber(project, taskName);
         if (task == null) { return null; }
 
         if (name == null || name.isBlank()) {
