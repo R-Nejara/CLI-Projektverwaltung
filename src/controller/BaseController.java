@@ -263,18 +263,15 @@ public abstract class BaseController implements Controller {
         Task task = getTaskByNameOrNumber(project, taskName);
         if (task == null) { return; } 
 
-        if (newName == null || newName.isBlank()) {
-            view.printError("Member name cannot be empty or null.");
-            return;
-        } else if (!isNameUnique(newName, getAssigneeNames(task))) {
+        if (newName != null && !newName.isBlank() &&!isNameUnique(newName, getAssigneeNames(task))) {
             view.printError("A member with the name '%s' already exists in task '%s'.".formatted(newName, taskName));
             return;
-        } else if (!nameIsValid(newName)) {
-            view.printError("Member name must start with a letter and cannot contain the '|' character.");
+        } else if (newName != null && !newName.isBlank() && !nameIsValid(newName)) {
+            view.printError("Task name must start with a letter and cannot contain the '|' character.");
             return;
         }
 
-        if (!newName.isBlank() && !newName.equals(task.getTitle())) {
+        if (newName != null && !newName.isBlank() && !newName.equals(task.getTitle())) {
             task.setTitle(newName);
             projectUpdated = true;
         }
