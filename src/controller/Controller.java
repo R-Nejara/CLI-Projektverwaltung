@@ -22,6 +22,7 @@ public interface Controller {
 
     public void addTask(String projectName, String name, String description, String state, String priority, LocalDateTime dueDate);
     public void listTasks(String projectName,String filter);
+    public void showTask(String projectName, String taskName);
     public void editTask(String projectName, String taskName, String newName, String description, String state, String priority, LocalDateTime dueDate);
     public void removeTasks(String projectName, Set<String> taskNames);
 

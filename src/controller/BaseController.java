@@ -242,6 +242,22 @@ public abstract class BaseController implements Controller {
     }
 
     /**
+     * Displays the details of a specific project.
+     *
+     * @param name the name of the project to display
+     */
+    @Override
+    public void showTask(String projectName, String taskName) {
+        Project project = getProjectByNameOrNumber(projectName);
+        if (project == null) { return; } 
+
+        Task task = getTaskByNameOrNumber(project, taskName);
+        if (task == null) { return; }
+
+        //view.printTask(task); //TODO: implement printTask in view
+    }
+
+    /**
      * Edits the details of an existing task if all validation rules are met.
      * The task is updated in the local collection and persistently saved via the model.
      *

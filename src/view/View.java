@@ -19,4 +19,5 @@ public interface View {
     public void printTaskList(List<Task> tasks);
     public void printMemberList(List<Member> members);
     public void printProject(Project project);
+    public void printTask(Task task);
 }

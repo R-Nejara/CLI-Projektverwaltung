@@ -35,6 +35,7 @@ public class TaskMenuState implements MenuState {
 
         menuActions.put("Add Task", () -> addTask());
         menuActions.put("List Tasks", () -> listTasks());
+        menuActions.put("Show Task", () -> showTask());
         menuActions.put("Edit Task", () -> editTask());
         menuActions.put("Delete Task", () -> deleteTask());
         menuActions.put("Back to Main Menu", () -> previousState);
@@ -76,6 +77,14 @@ public class TaskMenuState implements MenuState {
         String filterString = view.readUserInput("Enter filter string (leave empty for no filter):", null, null, true);
 
         controller.listTasks(attributes.projectName(), filterString);
+        view.waitForKeyPress();
+        return this;
+    }
+
+    private MenuState showTask() {
+        TaskAttributes attributes = readAttributes(true, true, false, false, false, false, false, true);
+
+        controller.showTask(attributes.projectName(), attributes.taskName());
         view.waitForKeyPress();
         return this;
     }
