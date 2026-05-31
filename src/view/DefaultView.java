@@ -120,7 +120,14 @@ public class DefaultView implements View {
     }
 
     @Override
-    public void listMembers(List<Member> members){}
+    public void listMembers(List<Member> members){
+        final int WHITESPACE = 15;
+        System.out.printf("┌%s Mitglieder %s┐", "─".repeat(WHITESPACE * 2), "─".repeat(WHITESPACE * 2));
+        for (Member member : members) {
+            System.out.printf("│ Name: %s%s Rolle: %s │", member.getName(), " ".repeat(WHITESPACE - member.getName().length()), member.getRole());
+        }
+            System.out.printf("└%s┘\n", "─".repeat((WHITESPACE * 2) + 12));
+    }
 
 //-------------------------------------------------------------------------
 // Section: Private Methoden
