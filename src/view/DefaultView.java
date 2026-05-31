@@ -3,10 +3,10 @@ package src.view;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import src.model.Member;
 import src.model.Project;
 import src.model.State;
 import src.model.Task;
-import src.model.Member;
 
 public class DefaultView implements View {
     Scanner scanner = new Scanner(System.in);
@@ -121,7 +121,7 @@ public class DefaultView implements View {
     }
 
     @Override
-    public void listMembers(List<Member> members){
+    public void printMemberList(List<Member> members){
         final int WHITESPACE = 15;
         System.out.printf("┌%s Mitglieder %s┐\n", "─".repeat(WHITESPACE * 2), "─".repeat(WHITESPACE * 2));
         for (Member member : members) {
