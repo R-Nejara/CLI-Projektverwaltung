@@ -1,5 +1,6 @@
 package src.view;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -7,6 +8,7 @@ import src.model.Member;
 import src.model.Project;
 import src.model.State;
 import src.model.Task;
+import src.utils.DateTimeUtil;
 
 public class DefaultView implements View {
     Scanner scanner = new Scanner(System.in);
@@ -58,7 +60,6 @@ public class DefaultView implements View {
             if (parsedUserInput > 0 && parsedUserInput <= options.length) {
                 return parsedUserInput;
             }
-            throw new IndexOutOfBoundsException();
 
             } catch (NumberFormatException e) {
                 System.out.println(errorMessage == null ?  e.getMessage() : errorMessage);
@@ -89,6 +90,10 @@ public class DefaultView implements View {
         
         System.out.printf("\n┌%s Projekte %s┐\n", "─".repeat(19), "─".repeat(81));
         for (Project project : projects) {
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateTimeUtil.SIMPLE_FORMAT);
+            String deadline = (project.getDueDate() != null) ? project.getDueDate().format(formatter) : "-";
+        
             counter++;
             System.out.printf(
                     "│ %d. %s%s\tErledigt: %d\tBearbeitungsbeginn/Offen: %d\tDeadline: %s%s│\n", counter,
@@ -96,7 +101,7 @@ public class DefaultView implements View {
                     " ".repeat(whitespace - project.getTitle().length()),
                     getTaskStateCount(project.getTasks(), true),
                     getTaskStateCount(project.getTasks(), false),
-                    project.getDueDate(),
+                    deadline,
                     " ".repeat(5)
             );
 
@@ -119,6 +124,8 @@ public class DefaultView implements View {
         int amountTaskCompleted = getTaskStateCount(project.getTasks(), true);
         int amountTasks = amountTaskInProgess + amountTaskCompleted;
         String emptyLine = " ".repeat(spacingWithTitle);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateTimeUtil.SIMPLE_FORMAT);
+        String deadline = (project.getDueDate() != null) ? project.getDueDate().format(formatter) : "-";
 
         // Project Title Format
         System.out.printf("┌%s %s %s┐\n", "─".repeat(WHITESPACE), project.getTitle(), "─".repeat(WHITESPACE) );
@@ -144,7 +151,7 @@ public class DefaultView implements View {
         System.out.printf("\n│%s│\n", emptyLine);
 
         // Deadline Output
-        System.out.printf("│ Deadline: %s%s│", project.getDueDate(), " ".repeat(spacingWithTitle - " Deadline: ".length() - String.valueOf(project.getDueDate()).length()));
+        System.out.printf("│ Deadline: %s%s│", deadline, " ".repeat(spacingWithTitle - " Deadline: ".length() - String.valueOf(project.getDueDate()).length()));
 
         // Box Close
         System.out.printf("\n└%s┘", "─".repeat(spacingWithTitle));
