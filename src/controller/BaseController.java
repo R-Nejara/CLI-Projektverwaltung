@@ -399,7 +399,7 @@ public abstract class BaseController implements Controller {
             return;
         }
 
-        view.listMembers(results);
+        view.printMembers(results);
     }
 
     /**
