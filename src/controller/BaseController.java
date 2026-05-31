@@ -120,7 +120,7 @@ public abstract class BaseController implements Controller {
                 view.printError("Project name must start with a letter and cannot contain the '|' character.");
                 return;
             } else if (!newName.equals(project.getTitle())) {
-                project.setName(newName);
+                project.setTitle(newName);
                 projectUpdated = true;
             } 
         }
@@ -399,7 +399,7 @@ public abstract class BaseController implements Controller {
             return;
         }
 
-        view.listMembers(results);
+        view.printMemberList(results);
     }
 
     /**

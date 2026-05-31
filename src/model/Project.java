@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import src.utils.DateTimeUtil;
@@ -14,60 +15,60 @@ public class Project {
     private final UUID id;
     private String name;
     private String description;
-    private final List<Task> tasks;
+    private final List<Task> tasks = new ArrayList<>();
     private LocalDateTime dueDate;
 
-    public Project(UUID id, String name, String desciption, LocalDateTime dueDate) {
-        this.id = id;
-        this.name = name;
-        this.description = desciption;
-        this.tasks = new ArrayList<>();
-        this.dueDate = dueDate;
+    public Project(UUID id, String title, String description, LocalDateTime dueDate) {
+        this.id = Objects.requireNonNull(id, "ID darf nicht null sein");
+        setTitle(title);
+        setDescription(description);
+        setDueDate(dueDate);
     }
 
-    public Project(String name, String desciption, LocalDateTime dueDate) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.description = desciption;
-        this.tasks = new ArrayList<>();
-        this.dueDate = dueDate;
+    public Project(String title, String description, LocalDateTime dueDate) {
+        this(UUID.randomUUID(), title, description, dueDate);
     }
 
 //-------------------------------------------------------------------------
 // Section: Getter
 //-------------------------------------------------------------------------
 
-    public UUID getId() { return this.id; }
-    public String getTitle() { return this.name; }
-    public String getDescription() { return this.description; }
-    public List<Task> getTasks() { return this.tasks; }
-    public LocalDateTime getDueDate() { return this.dueDate; }
+    public UUID getId() { return id; }
+    public String getTitle() { return name; }
+    public String getDescription() { return description; }
+    public List<Task> getTasks() { return List.copyOf(tasks); }
+    public LocalDateTime getDueDate() { return dueDate; }
 
 //-------------------------------------------------------------------------
 // Section: Setter
 //-------------------------------------------------------------------------
 
-    public void setName(String newName) {
-        if (newName != null && newName.isBlank()) { return; } //TODO: Error handling
-        this.name = newName;
+    public final void setTitle(String newTitle) {
+        if (newTitle == null) {
+            throw new IllegalArgumentException("Projekt-Titel darf nicht null sein.");
+        }
+        if (!NAME_PATTERN.matcher(newTitle).matches()) {
+            throw new IllegalArgumentException("Projekt-Titel entspricht nicht den Mustervorgaben.");
+        }
+        this.name = newTitle;
     }
 
-    public void setDescription(String newDesciption) {
-        this.description = newDesciption;
+    public final void setDescription(String newDescription) {
+        this.description = newDescription;
     }
 
-    public void addTasks(Task... newTasks) {
-        if (newTasks == null) { return; } 
+    public final void addTasks(Task... newTasks) {
+        if (newTasks == null) return;
         this.tasks.addAll(List.of(newTasks));
     }
 
-    public void removeTasks(Task... tasks) {
-        if (tasks == null) { return; } 
+    public final void removeTasks(Task... tasks) {
+        if (tasks == null) return;
         this.tasks.removeAll(List.of(tasks));
     }
 
-    public void setDueDate(LocalDateTime newDueDate) {
-        this.dueDate = (newDueDate == null) ? this.dueDate : newDueDate;
+    public final void setDueDate(LocalDateTime newDueDate) {
+        this.dueDate = newDueDate;
     }
 
 //-------------------------------------------------------------------------
@@ -80,7 +81,8 @@ public class Project {
         String due = (dueDate != null) ? dueDate.format(formatter) : "-";
 
         StringBuilder sb = new StringBuilder();
-        sb.append("%s\n  Beschreibung: %s\n  Fällig: %s\n  Aufgaben (%d):".formatted(name, description != null ? description : "-", due, tasks.size()));
+        sb.append("%s\n  Beschreibung: %s\n  Fällig: %s\n  Aufgaben (%d):"
+                .formatted(name, description != null ? description : "-", due, tasks.size()));
 
         if (tasks.isEmpty()) {
             sb.append("\n    Keine Aufgaben.");
