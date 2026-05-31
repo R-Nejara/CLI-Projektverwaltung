@@ -113,7 +113,7 @@ public class DefaultView implements View {
 
     @Override
     public void waitForKeyPress() {
-        System.out.println("\nPress Enter to continue...");
+        System.out.println("\nDrücke die Eingabetaste um fortzusetzen...");
         scanner.nextLine();
     }
 
