@@ -62,6 +62,12 @@ public class BackupView implements View {
     }
 
     @Override
+    public void waitForKeyPress() {
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
+    }
+
+    @Override
     public void printMessage(String message) {
         System.out.println(message);
     }

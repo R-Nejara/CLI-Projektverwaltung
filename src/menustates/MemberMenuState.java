@@ -56,6 +56,7 @@ public class MemberMenuState implements MenuState {
         MemberAttributes attributes = readAttributes(false, true, true);
 
         controller.addAssignee(attributes.projectName(), attributes.taskName(), attributes.memberName(), attributes.role());
+        view.waitForKeyPress();
         return this;
     }
 
@@ -63,6 +64,7 @@ public class MemberMenuState implements MenuState {
         MemberAttributes attributes = readAttributes(true, true, true);
 
         controller.editAssignee(attributes.projectName(), attributes.taskName(), attributes.memberName(), attributes.newMemberName(), attributes.role());
+        view.waitForKeyPress();
         return this;
     }
 
@@ -70,6 +72,7 @@ public class MemberMenuState implements MenuState {
         MemberAttributes attributes = readAttributes(false, false, true);
 
         controller.removeAssignees(attributes.projectName(), attributes.taskName(), Set.of(attributes.memberName()));
+        view.waitForKeyPress();
         return this;
     }
 

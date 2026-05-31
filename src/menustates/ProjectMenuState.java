@@ -58,6 +58,7 @@ public class ProjectMenuState implements MenuState {
         ProjectAttributes attributes = readAttributes(false, false, true, true, true);
 
         controller.addProject(attributes.projectName(), attributes.description(), DateTimeUtil.parseDateTime(attributes.dueDate()));
+        view.waitForKeyPress();
         return this;
     }
 
@@ -65,6 +66,7 @@ public class ProjectMenuState implements MenuState {
         ProjectAttributes attributes = readAttributes(true, true, true, true, true);
 
         controller.editProject(attributes.projectName(), attributes.newProjectName(), attributes.description(), DateTimeUtil.parseDateTime(attributes.dueDate()));
+        view.waitForKeyPress();
         return this;
     }
 
@@ -72,7 +74,7 @@ public class ProjectMenuState implements MenuState {
         String filter = view.readUserInput("Enter a filter or press enter:", null, null, true);
         
         controller.listProjects(filter);
-        view.readUserInput("Press enter to continue...", null, null, false);
+        view.waitForKeyPress();
         return this;
     }
 
@@ -80,6 +82,7 @@ public class ProjectMenuState implements MenuState {
         ProjectAttributes attributes = readAttributes(true, false, false, false, true);
 
         controller.showProject(attributes.projectName());
+        view.waitForKeyPress();
         return this;
     }
 
@@ -87,8 +90,10 @@ public class ProjectMenuState implements MenuState {
         ProjectAttributes attributes = readAttributes(true, false, false, false, true);
 
         controller.removeProjects(Set.of(attributes.projectName()));
+        view.waitForKeyPress();
         return this;
     }
+
 
 //-------------------------------------------------------------------------
 // Section: private functions
