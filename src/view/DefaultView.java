@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import src.model.Project;
+import src.model.State;
 import src.model.Task;
 
 public class DefaultView implements View {
@@ -80,9 +81,23 @@ public class DefaultView implements View {
 
     @Override
     public void printProjectList(List<Project> projects) {
+        int counter = 0;
+        int whitespace = 20;
+        int boxlength = 76;
+        
+        System.out.printf("\n%s Projekte %s\n\n", "─".repeat(19), "─".repeat(47));
         for (Project project : projects) {
-            System.out.println((project.getTitle()));
+            counter++;
+            System.out.printf(
+                    "%d. %s%s\tErledigt: %d\tBearbeitungsbeginn/Offen: %d\n\n", counter,
+                    project.getTitle(),
+                    " ".repeat(whitespace - project.getTitle().length()),
+                    getTaskStateCount(project.getTasks(), true),
+                    getTaskStateCount(project.getTasks(), false)
+            );
+
         }
+        System.out.println("─".repeat(boxlength));
     }
 
     @Override
@@ -94,4 +109,9 @@ public class DefaultView implements View {
 
     @Override
     public void printProject(Project project) {}
+     private int getTaskStateCount(List<Task> tasks, boolean completed){
+        return tasks.stream().filter(task -> {
+           return completed ? task.getState().equals(State.DONE) : task.getState().equals(State.IN_PROGRESS) || task.getState().equals(State.OPEN);
+        }).toList().size();
+    }
 }
