@@ -84,17 +84,18 @@ public class DefaultView implements View {
     public void printProjectList(List<Project> projects) {
         int counter = 0;
         int whitespace = 20;
-        int boxlength = 76;
+        int boxlength = 110;
         
-        System.out.printf("\n%s Projekte %s\n\n", "─".repeat(19), "─".repeat(47));
+        System.out.printf("\n%s Projekte %s\n\n", "─".repeat(19), "─".repeat(81));
         for (Project project : projects) {
             counter++;
             System.out.printf(
-                    "%d. %s%s\tErledigt: %d\tBearbeitungsbeginn/Offen: %d\n\n", counter,
+                    "%d. %s%s\tErledigt: %d\tBearbeitungsbeginn/Offen: %d\tDeadline: %s\n\n", counter,
                     project.getTitle(),
                     " ".repeat(whitespace - project.getTitle().length()),
                     getTaskStateCount(project.getTasks(), true),
-                    getTaskStateCount(project.getTasks(), false)
+                    getTaskStateCount(project.getTasks(), false),
+                    project.getDueDate()
             );
 
         }
