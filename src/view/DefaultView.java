@@ -42,11 +42,12 @@ public class DefaultView implements View {
         ConsoleFormatter.clear();
 
         while (true) {
-            System.out.printf("Wähle eine Option:\n");
+            System.out.printf("┌%s Wähle eine Option %s┐\n","─".repeat(9) ,"─".repeat(9));
 
             for (int i = 0; i < options.length; i++) {
-               System.out.printf("%d. %s\n", i+1, options[i]);
+               System.out.printf("│ %d. %s%s│\n", i+1, options[i], " ".repeat(31 - options[i].length() + 2));
             }
+            System.out.printf("└%s┘\n","─".repeat(37));
             System.out.printf("> ");
             userInput = scanner.nextLine();
 
